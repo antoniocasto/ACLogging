@@ -5,4 +5,4 @@
 - [x] Creare il commit iniziale su develop con i file di setup.
 - [x] Creare/allineare localmente il branch main dal commit iniziale.
 - [x] Tornare su develop come branch di lavoro.
-- [ ] Verificare stato finale e branch disponibili.
+- [x] Verificare stato finale e branch disponibili.
