@@ -41,6 +41,10 @@ fastlane/test_output/
 *.swp
 *.swo
 
+# Local Codex plans
+docs/*plan*.md
+plans/
+
 # Archives and generated bundles
 *.ipa
 *.dSYM.zip
