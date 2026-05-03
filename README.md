@@ -225,3 +225,10 @@ func tracksPaywallStart() {
     #expect(service.trackEventCalls.first?.event.eventName == "Paywall_View_Start")
 }
 ```
+
+## Credits
+
+This package was built while following the SwiftUI Advanced Architectures course by Nick Sarno.
+
+YouTube: @SwiftfulThinking
+Course: SwiftUI Advanced Architectures

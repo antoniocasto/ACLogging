@@ -11,3 +11,10 @@ The core package stays dependency-free. Provider integrations belong in adapter 
 ## Example Catalog
 
 Open `Examples/ACLoggingCatalog/ACLoggingCatalog.xcodeproj` to run the iOS catalog app. It demonstrates the current package products and keeps adapter slots visible for future Firebase, Mixpanel, and custom provider integrations.
+
+## Credits
+
+This package was built while following the SwiftUI Advanced Architectures course by Nick Sarno.
+
+YouTube: @SwiftfulThinking
+Course: SwiftUI Advanced Architectures
