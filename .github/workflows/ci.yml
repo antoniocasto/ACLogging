@@ -49,21 +49,9 @@ jobs:
             -destination "generic/platform=iOS Simulator" \
             -clonedSourcePackagesDirPath .build
 
-      - name: Test iOS
+      - name: Test Swift Package
         run: |
-          xcodebuild test \
-            -scheme ACLogging \
-            -destination "platform=iOS Simulator,OS=${{ matrix.ios }},name=iPhone 17 Pro" \
-            -clonedSourcePackagesDirPath .build \
-            -resultBundlePath TestResults-iOS.xcresult
-
-      - name: Test macOS
-        run: |
-          xcodebuild test \
-            -scheme ACLogging \
-            -destination "platform=macOS" \
-            -clonedSourcePackagesDirPath .build \
-            -resultBundlePath TestResults-macOS.xcresult
+          swift test
 
       - name: Upload test results
         if: failure()
@@ -71,6 +59,5 @@ jobs:
         with:
           name: TestResults-Xcode${{ matrix.xcode }}-iOS${{ matrix.ios }}
           path: |
-            TestResults-iOS.xcresult
-            TestResults-macOS.xcresult
+            .build
           retention-days: 7
