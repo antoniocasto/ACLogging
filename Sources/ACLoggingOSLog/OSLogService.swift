@@ -1,0 +1,128 @@
+import ACLogging
+import Foundation
+import OSLog
+
+public struct OSLogService: LogService {
+    private let logger: Logger
+    private let shouldPrintParameters: Bool
+
+    public init(
+        subsystem: String? = nil,
+        category: String = "default",
+        shouldPrintParameters: Bool = true
+    ) {
+        let resolvedSubsystem = subsystem ?? Bundle.main.bundleIdentifier ?? "ACLogging"
+        self.logger = Logger(subsystem: resolvedSubsystem, category: category)
+        self.shouldPrintParameters = shouldPrintParameters
+    }
+
+    public func identifyUser(userId: String, name: String?, email: String?) {
+        var parameters: LogParameters = ["userId": .string(userId)]
+
+        if let name {
+            parameters["name"] = .string(name)
+        }
+
+        if let email {
+            parameters["email"] = .string(email)
+        }
+
+        log(name: "IdentifyUser", parameters: parameters, type: .info)
+    }
+
+    public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
+        var parameters = properties
+        parameters["isHighPriority"] = .bool(isHighPriority)
+        log(name: "AddUserProperties", parameters: parameters, type: .info)
+    }
+
+    public func deleteUserProfile() {
+        log(name: "DeleteUserProfile", parameters: [:], type: .warning)
+    }
+
+    public func trackEvent(_ event: any LoggableEvent) {
+        logger.log(
+            level: Self.osLogType(for: event.logType),
+            "\(Self.message(for: event, shouldPrintParameters: shouldPrintParameters), privacy: .public)"
+        )
+    }
+
+    public func trackScreenEvent(_ event: any LoggableEvent) {
+        trackEvent(event)
+    }
+
+    private func log(name: String, parameters: LogParameters, type: LogType) {
+        logger.log(
+            level: Self.osLogType(for: type),
+            "\(Self.message(eventName: name, parameters: parameters, shouldPrintParameters: shouldPrintParameters), privacy: .public)"
+        )
+    }
+}
+
+extension OSLogService {
+    static func osLogType(for logType: LogType) -> OSLogType {
+        switch logType {
+        case .info:
+            return .info
+        case .analytic:
+            return .default
+        case .warning:
+            return .error
+        case .severe:
+            return .fault
+        }
+    }
+
+    static func message(for event: any LoggableEvent, shouldPrintParameters: Bool) -> String {
+        message(
+            eventName: event.eventName,
+            parameters: event.parameters,
+            shouldPrintParameters: shouldPrintParameters
+        )
+    }
+
+    static func message(
+        eventName: String,
+        parameters: LogParameters?,
+        shouldPrintParameters: Bool
+    ) -> String {
+        guard shouldPrintParameters else {
+            return eventName
+        }
+
+        guard let parameters else {
+            return eventName
+        }
+
+        let formattedParameters = formattedParameters(parameters)
+        guard !formattedParameters.isEmpty else {
+            return eventName
+        }
+
+        return "\(eventName) \(formattedParameters)"
+    }
+
+    static func formattedParameters(_ parameters: LogParameters) -> String {
+        parameters
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key)=\(formattedValue($0.value))" }
+            .joined(separator: " ")
+    }
+
+    private static func formattedValue(_ value: LogValue) -> String {
+        switch value {
+        case let .string(value):
+            return value
+        case let .int(value):
+            return "\(value)"
+        case let .double(value):
+            return "\(value)"
+        case let .bool(value):
+            return "\(value)"
+        case let .date(value):
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime]
+            return formatter.string(from: value)
+        }
+    }
+}
