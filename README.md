@@ -168,6 +168,25 @@ struct PaywallView: View {
 
 This tracks `Paywall_appear` on `onAppear` and `Paywall_disappear` on `onDisappear`. `LogManager` does not need to be `@Observable`.
 
+## Catalog App
+
+The repository includes a small iOS SwiftUI catalog app for evaluating ACLogging before importing it into another project.
+
+Open:
+
+```text
+Examples/ACLoggingCatalog/ACLoggingCatalog.xcodeproj
+```
+
+Run the `ACLoggingCatalog` scheme on an iOS simulator. The catalog demonstrates:
+
+- typed `LoggableEvent` scenarios
+- convenience `trackEvent(eventName:parameters:logType:)` calls
+- user identity and property calls
+- SwiftUI screen lifecycle logging
+- in-app captured calls through a demo `LogService`
+- OSLog formatting and future adapter slots for Firebase, Mixpanel, and custom providers
+
 ## Event Naming
 
 Use this convention:

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added an iOS SwiftUI catalog app under `Examples/ACLoggingCatalog` for testing ACLogging before SPM adoption.
 - Changed release tag policy to use `X.Y.Z` tags without a leading `v`.
 - Added versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and future roadmap planning.
 - Initial package foundation.

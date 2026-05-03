@@ -42,6 +42,7 @@ fastlane/test_output/
 *.swo
 
 # Local Codex plans
+.superpowers/
 docs/*plan*.md
 plans/
 
