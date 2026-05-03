@@ -36,7 +36,7 @@ Then add the products you need to each target:
 
 ## Versioning
 
-ACLogging uses Semantic Versioning for package releases. Documentation and changelog entries use plain versions such as `0.1.0`; Git tags and GitHub releases use a `v` prefix such as `v0.1.0`.
+ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `0.1.0`, without a leading `v`.
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
 

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Changed release tag policy to use `X.Y.Z` tags without a leading `v`.
 - Added versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and future roadmap planning.
 - Initial package foundation.
 - Added `ACLoggingOSLog` adapter documentation and test coverage for deterministic formatting helpers.

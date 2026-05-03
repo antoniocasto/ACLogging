@@ -10,17 +10,17 @@ Released versions use this format:
 MAJOR.MINOR.PATCH
 ```
 
-Git tags and GitHub releases use the same version with a `v` prefix:
+Git tags and GitHub releases use the same plain version, without a leading `v`:
 
 ```text
-vMAJOR.MINOR.PATCH
+MAJOR.MINOR.PATCH
 ```
 
 Examples:
 
 - `0.1.0` in documentation and changelog headings
-- `v0.1.0` as the Git tag and GitHub release name
-- `v0.2.0-beta.1` for an optional pre-release
+- `0.1.0` as the Git tag and GitHub release name
+- `0.2.0-beta.1` for an optional pre-release
 
 ## Semantic Versioning Rules
 
@@ -88,7 +88,7 @@ Use these entry groups when helpful:
 Every released version must have:
 
 - A matching changelog section.
-- A matching Git tag, for example `v0.1.0`.
+- A matching Git tag, for example `0.1.0`.
 - A matching GitHub release, if the repository has a remote.
 
 ## Release Flow
@@ -102,7 +102,7 @@ Local branch flow:
 5. Create an annotated tag from `main`:
 
 ```bash
-git tag -a v0.1.0 -m "Release 0.1.0"
+git tag -a 0.1.0 -m "Release 0.1.0"
 ```
 
 6. Push `main`, `develop`, and the tag when a remote is configured.
@@ -119,7 +119,7 @@ Documentation should refer to stable releases by version number and tag.
 
 Examples:
 
-- Installation examples can use `from: "0.1.0"` once `v0.1.0` exists.
+- Installation examples can use `from: "0.1.0"` once the `0.1.0` tag exists.
 - Migration notes should name the source and target versions, for example `0.1.x to 0.2.0`.
 - Adapter documentation should state when an adapter was introduced if that matters to package clients.
 
