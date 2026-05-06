@@ -5,6 +5,14 @@ This folder contains public documentation assets for ACLogging.
 - [Event conventions](EventConventions.md)
 - [Adapter guide](Adapters.md)
 - [Versioning and releases](Versioning.md)
+- [Roadmap](ROADMAP.md)
+
+DocC usage articles live with the package source:
+
+- [Typed event examples](../Sources/ACLogging/ACLogging.docc/TypedEventExamples.md)
+- [OSLog adapter examples](../Sources/ACLogging/ACLogging.docc/OSLogAdapterExamples.md)
+- [SwiftUI screen tracking examples](../Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
+- [Testing examples](../Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
 The core package stays dependency-free. Provider integrations belong in adapter targets so app teams can opt into only the SDKs they need.
 

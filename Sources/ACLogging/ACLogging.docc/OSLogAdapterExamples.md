@@ -1,0 +1,58 @@
+# OSLog Adapter Examples
+
+Use `ACLoggingOSLog` when you want ACLogging events to appear in Apple's unified logging system.
+
+## Basic Setup
+
+Create an `OSLogService` and pass it to `LogManager`:
+
+```swift
+import ACLogging
+import ACLoggingOSLog
+
+let manager = LogManager(
+    services: [
+        OSLogService(
+            subsystem: "com.example.app",
+            category: "Analytics",
+            shouldPrintParameters: true
+        )
+    ]
+)
+```
+
+When `subsystem` is `nil`, `OSLogService` uses `Bundle.main.bundleIdentifier` and falls back to `ACLogging`.
+
+## Logging Events
+
+General events and screen events use the same OSLog formatting path:
+
+```swift
+manager.trackEvent(
+    eventName: "Onboarding_Skip",
+    parameters: ["step": .string("notifications")],
+    logType: .analytic
+)
+
+manager.trackScreenEvent(
+    AnyLoggableEvent(
+        eventName: "Home_appear",
+        parameters: nil,
+        logType: .analytic
+    )
+)
+```
+
+## Parameter Privacy
+
+`OSLogService` currently writes the rendered message with public privacy. Disable parameter printing if values may contain sensitive data:
+
+```swift
+let diagnosticsOnlyService = OSLogService(
+    subsystem: "com.example.app",
+    category: "Diagnostics",
+    shouldPrintParameters: false
+)
+```
+
+With parameter printing disabled, the log message contains only the event name.

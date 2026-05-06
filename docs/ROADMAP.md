@@ -62,6 +62,7 @@ Make ACLogging a compact, provider-agnostic Swift logging package with a depende
 ## 0.1.0 - Planned
 
 - Ship core logging, OSLog adapter, SwiftUI screen lifecycle helper, test support, README, DocC, roadmap, changelog, and CI.
+- Include a public logo asset and usage-focused DocC articles for the primary integration paths.
 
 ## 0.2.0 - Planned
 

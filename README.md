@@ -1,9 +1,14 @@
+<p align="center">
+  <img src="Assets/Brand/aclogging-logo.svg" alt="ACLogging logo" width="180">
+</p>
+
 # ACLogging
 
 ACLogging is a small Swift Package for provider-agnostic application logging on iOS and macOS.
 
 Documentation:
 - Public documentation lives in [docs/](docs/README.md).
+- Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
 - Hosted docs are not published yet.
 - Current public package release: not tagged yet; planned initial release is `0.1.0`.
 
@@ -232,6 +237,15 @@ Run the `ACLoggingCatalog` scheme on an iOS simulator. The catalog demonstrates:
 - SwiftUI screen lifecycle logging
 - in-app captured calls through a demo `LogService`
 - OSLog formatting and future adapter slots for Firebase, Mixpanel, and custom providers
+
+## Usage Articles
+
+DocC includes focused usage articles for the main integration paths:
+
+- [Typed event examples](Sources/ACLogging/ACLogging.docc/TypedEventExamples.md)
+- [OSLog adapter examples](Sources/ACLogging/ACLogging.docc/OSLogAdapterExamples.md)
+- [SwiftUI screen tracking examples](Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
+- [Testing examples](Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
 ## Event Naming
 
