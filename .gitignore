@@ -40,6 +40,7 @@ fastlane/test_output/
 *.tmp
 *.swp
 *.swo
+.netrc
 
 # Local Codex planning artifacts
 .codex-plan.md
@@ -53,3 +54,11 @@ plans/
 *.ipa
 *.dSYM.zip
 *.dSYM
+.derivedData-docs/
+docs-site/
+docc-preview/
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.synctex.gz

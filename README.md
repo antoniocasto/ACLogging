@@ -2,6 +2,17 @@
 
 ACLogging is a small Swift Package for provider-agnostic application logging on iOS and macOS.
 
+Documentation:
+- Public documentation lives in [docs/](docs/README.md).
+- Hosted docs are not published yet.
+- Current public package release: not tagged yet; planned initial release is `0.1.0`.
+
+## Why ACLogging
+
+- Keep app logging provider-agnostic so analytics, diagnostics, and screen tracking do not leak vendor SDK types into feature code.
+- Keep the core target dependency-free while adapters opt into platform or provider-specific behavior.
+- Give tests a first-class `MockLogService` so event forwarding can be asserted without network calls or provider SDK setup.
+
 The package is split into focused products:
 
 - `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LoggableEvent`, `LogParameters`, and `LogValue`.
@@ -11,9 +22,29 @@ The package is split into focused products:
 
 Firebase and Mixpanel are intentionally separate future adapters. They should live outside the core so their SDK dependencies never leak into `ACLogging`.
 
+## Platform and Tooling
+
+- Swift tools: `6.0`
+- Supported Apple platforms:
+  - iOS `17+`
+  - macOS `14+`
+
+Notes:
+- `ACLogging` and `ACLoggingTestSupport` are platform-neutral within the package platform floors.
+- `ACLoggingOSLog` depends on Apple's unified logging APIs.
+- `ACLoggingSwiftUI` depends on SwiftUI and is intended for SwiftUI view lifecycle tracking.
+
 ## Installation
 
-Add the package with Swift Package Manager:
+### Xcode
+
+1. Open `File > Add Package Dependencies...`
+2. Use: `https://github.com/antoniocasto/ACLogging.git`
+3. Pick a branch until the initial `0.1.0` release is tagged, then pick the release version.
+
+### `Package.swift`
+
+After the initial `0.1.0` release is tagged, add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
@@ -27,11 +58,19 @@ Then add the products you need to each target:
 .target(
     name: "YourApp",
     dependencies: [
-        "ACLogging",
-        "ACLoggingOSLog",
-        "ACLoggingSwiftUI"
+        .product(name: "ACLogging", package: "ACLogging"),
+        .product(name: "ACLoggingOSLog", package: "ACLogging"),
+        .product(name: "ACLoggingSwiftUI", package: "ACLogging")
     ]
 )
+```
+
+Until the first public tag exists, use a branch requirement instead:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/antoniocasto/ACLogging.git", branch: "main")
+]
 ```
 
 ## Versioning
@@ -40,7 +79,7 @@ ACLogging uses Semantic Versioning for package releases. Documentation, changelo
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
 
-## Setup
+## Quick Start
 
 ```swift
 import ACLogging
@@ -168,6 +207,13 @@ struct PaywallView: View {
 
 This tracks `Paywall_appear` on `onAppear` and `Paywall_disappear` on `onDisappear`. `LogManager` does not need to be `@Observable`.
 
+## Current Limits
+
+- ACLogging does not ship Firebase, Mixpanel, or network-backed adapters yet.
+- `LogManager` forwards calls synchronously to configured services; queueing, retry, persistence, and batching are adapter responsibilities.
+- `ACLoggingOSLog` is intended for local diagnostics and unified logging, not remote analytics delivery.
+- `ACLoggingSwiftUI` logs `onAppear` and `onDisappear` lifecycle events only; navigation semantics remain owned by the consuming app.
+
 ## Catalog App
 
 The repository includes a small iOS SwiftUI catalog app for evaluating ACLogging before importing it into another project.
@@ -226,9 +272,23 @@ func tracksPaywallStart() {
 }
 ```
 
+## Development
+
+```bash
+swift package resolve
+swift build
+swift test
+```
+
+DocC validation is performed by the GitHub Actions workflows. Locally, use Xcode's package documentation build when an Apple toolchain with DocC support is selected.
+
 ## Credits
 
 This package was built while following the SwiftUI Advanced Architectures course by Nick Sarno.
 
 YouTube: @SwiftfulThinking
 Course: SwiftUI Advanced Architectures
+
+## License
+
+MIT. See [LICENSE.md](LICENSE.md).

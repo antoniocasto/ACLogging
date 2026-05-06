@@ -1,11 +1,24 @@
 # Changelog
 
-## Unreleased
+All notable changes to this project will be documented in this file.
 
-- Added an iOS SwiftUI catalog app under `Examples/ACLoggingCatalog` for testing ACLogging before SPM adoption.
-- Changed release tag policy to use `X.Y.Z` tags without a leading `v`.
-- Added versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and future roadmap planning.
-- Initial package foundation.
-- Added `ACLoggingOSLog` adapter documentation and test coverage for deterministic formatting helpers.
-- Added SwiftUI screen lifecycle logging documentation for `ACLoggingSwiftUI`.
-- Documented typed `LoggableEvent` usage, `LogParameters`/`LogValue`, event naming, async flow conventions, and test support.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project aims to follow [Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+### Added
+
+- Initial package foundation for provider-agnostic application logging.
+- `ACLoggingOSLog` adapter documentation and test coverage for deterministic formatting helpers.
+- SwiftUI screen lifecycle logging documentation for `ACLoggingSwiftUI`.
+- Typed `LoggableEvent` usage, `LogParameters`/`LogValue`, event naming, async flow conventions, and test support documentation.
+- iOS SwiftUI catalog app under `Examples/ACLoggingCatalog` for testing ACLogging before SPM adoption.
+- Versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and roadmap planning.
+- SPM package compliance documentation, DocC catalog, and roadmap.
+
+### Changed
+
+- Release tag policy uses `X.Y.Z` tags without a leading `v`.
+
+### Fixed

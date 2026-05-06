@@ -1,5 +1,6 @@
 import ACLogging
 import ACLoggingTestSupport
+import Foundation
 import Testing
 
 @Suite("LogManager")
@@ -106,5 +107,21 @@ struct LogManagerTests {
 
         #expect(firstService.trackScreenEventCalls == [.init(event: event)])
         #expect(secondService.trackScreenEventCalls == [.init(event: event)])
+    }
+
+    @Test("log values support codable round trips")
+    func logValuesSupportCodableRoundTrips() throws {
+        let parameters: LogParameters = [
+            "name": .string("Paywall"),
+            "count": .int(3),
+            "amount": .double(42.5),
+            "enabled": .bool(true),
+            "createdAt": .date(Date(timeIntervalSince1970: 0))
+        ]
+
+        let data = try JSONEncoder().encode(parameters)
+        let decoded = try JSONDecoder().decode(LogParameters.self, from: data)
+
+        #expect(decoded == parameters)
     }
 }

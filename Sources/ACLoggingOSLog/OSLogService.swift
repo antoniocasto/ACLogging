@@ -2,10 +2,17 @@ import ACLogging
 import Foundation
 import OSLog
 
+/// A log service that writes ACLogging events through Apple's unified logging system.
 public struct OSLogService: LogService {
     private let logger: Logger
     private let shouldPrintParameters: Bool
 
+    /// Creates an OSLog-backed service.
+    ///
+    /// - Parameters:
+    ///   - subsystem: The unified logging subsystem. Defaults to the app bundle identifier, then `ACLogging`.
+    ///   - category: The unified logging category.
+    ///   - shouldPrintParameters: Whether event and user parameters should be included in public log messages.
     public init(
         subsystem: String? = nil,
         category: String = "default",
@@ -16,6 +23,7 @@ public struct OSLogService: LogService {
         self.shouldPrintParameters = shouldPrintParameters
     }
 
+    /// Logs a user-identification event.
     public func identifyUser(userId: String, name: String?, email: String?) {
         var parameters: LogParameters = ["userId": .string(userId)]
 
@@ -30,16 +38,19 @@ public struct OSLogService: LogService {
         log(name: "IdentifyUser", parameters: parameters, type: .info)
     }
 
+    /// Logs user properties.
     public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
         var parameters = properties
         parameters["isHighPriority"] = .bool(isHighPriority)
         log(name: "AddUserProperties", parameters: parameters, type: .info)
     }
 
+    /// Logs a user-profile deletion event.
     public func deleteUserProfile() {
         log(name: "DeleteUserProfile", parameters: [:], type: .warning)
     }
 
+    /// Logs a general event using the event's log type.
     public func trackEvent(_ event: any LoggableEvent) {
         logger.log(
             level: Self.osLogType(for: event.logType),
@@ -47,6 +58,7 @@ public struct OSLogService: LogService {
         )
     }
 
+    /// Logs a screen event using the same formatting as general events.
     public func trackScreenEvent(_ event: any LoggableEvent) {
         trackEvent(event)
     }

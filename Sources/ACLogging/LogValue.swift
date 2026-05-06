@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type-safe value that can be attached to log events and user properties.
-public enum LogValue: Sendable, Equatable {
+public enum LogValue: Sendable, Equatable, Codable {
     /// A text value.
     case string(String)
 
