@@ -2,6 +2,10 @@
 
 Model analytics and diagnostics as small typed values before sending them to `LogManager`.
 
+## Code Reference
+
+This article describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC article generated from the matching Git tag for that package version.
+
 ## Paywall Flow
 
 Use one enum per business surface when events share naming and parameter conventions:

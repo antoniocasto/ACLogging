@@ -2,6 +2,10 @@
 
 Use `ACLoggingOSLog` when you want ACLogging events to appear in Apple's unified logging system.
 
+## Code Reference
+
+This article describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC article generated from the matching Git tag for that package version.
+
 ## Basic Setup
 
 Create an `OSLogService` and pass it to `LogManager`:
