@@ -3,6 +3,11 @@ import Foundation
 import OSLog
 
 /// A log service that writes ACLogging events through Apple's unified logging system.
+///
+/// Event names are written as public unified-log content. When
+/// `shouldPrintParameters` is `true`, rendered parameters are also public, so
+/// apps should avoid sending personally identifiable or sensitive values to this
+/// adapter unless that visibility is intentional.
 public struct OSLogService: LogService {
     private let logger: Logger
     private let shouldPrintParameters: Bool
@@ -12,7 +17,7 @@ public struct OSLogService: LogService {
     /// - Parameters:
     ///   - subsystem: The unified logging subsystem. Defaults to the app bundle identifier, then `ACLogging`.
     ///   - category: The unified logging category.
-    ///   - shouldPrintParameters: Whether event and user parameters should be included in public log messages.
+    ///   - shouldPrintParameters: Whether event and user parameters should be included in public log messages. Passing `false` still logs event names publicly.
     public init(
         subsystem: String? = nil,
         category: String = "default",
@@ -24,6 +29,9 @@ public struct OSLogService: LogService {
     }
 
     /// Logs a user-identification event.
+    ///
+    /// The user identifier and optional profile fields are rendered as
+    /// parameters when `shouldPrintParameters` is enabled.
     public func identifyUser(userId: String, name: String?, email: String?) {
         var parameters: LogParameters = ["userId": .string(userId)]
 
@@ -39,6 +47,9 @@ public struct OSLogService: LogService {
     }
 
     /// Logs user properties.
+    ///
+    /// Properties are rendered as public parameters when
+    /// `shouldPrintParameters` is enabled.
     public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
         var parameters = properties
         parameters["isHighPriority"] = .bool(isHighPriority)
@@ -51,6 +62,10 @@ public struct OSLogService: LogService {
     }
 
     /// Logs a general event using the event's log type.
+    ///
+    /// Mapping is `.info` to `OSLogType.info`, `.analytic` to
+    /// `OSLogType.default`, `.warning` to `OSLogType.error`, and `.severe` to
+    /// `OSLogType.fault`.
     public func trackEvent(_ event: any LoggableEvent) {
         logger.log(
             level: Self.osLogType(for: event.logType),

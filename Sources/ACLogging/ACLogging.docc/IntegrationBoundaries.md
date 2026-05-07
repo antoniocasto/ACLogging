@@ -4,7 +4,7 @@ Keep logging calls stable in feature code while provider-specific behavior stays
 
 ## Code Reference
 
-This article describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC article generated from the matching Git tag for that package version.
+This article describes the ACLogging API released in `1.0.0`. Published DocC should be generated from the matching Git tag for the package version being documented.
 
 ## Core Usage
 

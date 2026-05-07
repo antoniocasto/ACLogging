@@ -9,8 +9,8 @@ ACLogging is a small Swift Package for provider-agnostic application logging on 
 Documentation:
 - Public documentation lives in [docs/](docs/README.md).
 - Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
-- Hosted DocC publication is configured through GitHub Pages and will become available after the first `main` deployment.
-- Current public package release: not tagged yet; planned initial release is `0.1.0`.
+- Hosted DocC publication is configured through GitHub Pages from `main`.
+- Current public package release: `1.0.0`.
 
 ## Why ACLogging
 
@@ -45,15 +45,15 @@ Notes:
 
 1. Open `File > Add Package Dependencies...`
 2. Use: `https://github.com/antoniocasto/ACLogging.git`
-3. Pick a branch until the initial `0.1.0` release is tagged, then pick the release version.
+3. Pick release version `1.0.0` or later.
 
 ### `Package.swift`
 
-After the initial `0.1.0` release is tagged, add the package with Swift Package Manager:
+Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "0.1.0")
+    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.0.0")
 ]
 ```
 
@@ -70,7 +70,7 @@ Then add the products you need to each target:
 )
 ```
 
-Until the first public tag exists, use a branch requirement instead:
+For unreleased development snapshots, use a branch requirement instead:
 
 ```swift
 dependencies: [
@@ -80,7 +80,7 @@ dependencies: [
 
 ## Versioning
 
-ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `0.1.0`, without a leading `v`.
+ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `1.0.0`, without a leading `v`.
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
 
@@ -91,7 +91,7 @@ The repository is structured for a public Swift Package release:
 - Required public repository files are present: `README.md`, `LICENSE.md`, `CHANGELOG.md`, and `docs/`.
 - CI validates package build, `swift test`, and DocC generation on pull requests to `develop` and `main`.
 - The Docs workflow builds the DocC archive and publishes a static documentation site from `main`.
-- Current release target is `0.1.0`; `1.0.0` remains planned for a later stable API milestone after production adoption and migration review.
+- Current release target is `1.0.0`, the stable baseline for the public API surface described here.
 
 ## Quick Start
 
@@ -256,7 +256,7 @@ DocC includes focused usage articles for the main integration paths:
 - [SwiftUI screen tracking examples](Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
 - [Testing examples](Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
-Every DocC page must state the code version it describes. Until the first public tag is cut, DocC pages refer to the unreleased API planned for `0.1.0`; after release, published DocC should be generated from the matching Git tag.
+Every DocC page must state the code version it describes. Published DocC should be generated from the matching Git tag for the release being documented.
 
 ## Event Naming
 
