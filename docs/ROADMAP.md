@@ -17,8 +17,8 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 
 ### Ready Scope
 
-- `ACLogging`: dependency-free core types for manager fan-out, services, typed events, event values, and log type classification.
-- `ACLoggingOSLog`: Apple unified logging adapter with deterministic parameter formatting and configurable parameter printing.
+- `ACLogging`: dependency-free core types for manager fan-out, services, typed events, event options, optional identity subjects, event values, and log type classification.
+- `ACLoggingOSLog`: Apple unified logging adapter with deterministic parameter formatting and per-event parameter privacy.
 - `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking through environment-injected `LogManager`.
 - `ACLoggingTestSupport`: `MockLogService` for deterministic assertions without provider SDKs or network calls.
 - Public documentation: README, DocC articles, adapter guide, event conventions, versioning policy, changelog, and example catalog app.
@@ -29,7 +29,7 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 - The catalog app already exposes future adapter slots for Firebase, Mixpanel, and custom providers.
 - Current SwiftUI tracking is intentionally minimal: `appear` and `disappear` events with no custom names or parameters.
 - `LogValue` covers the common scalar payload types but not richer provider payload shapes such as arrays, nested objects, URLs, decimals, or explicit null values.
-- OSLog privacy is currently controlled through `shouldPrintParameters`, while finer per-parameter privacy policy is not modeled.
+- OSLog privacy is controlled by `LogOptions.parameterPrivacy`; finer per-parameter privacy is not modeled.
 - The package has a clean adapter boundary, but no formal adapter authoring kit, provider compliance checklist, or migration templates yet.
 
 ## Release Policy
@@ -119,7 +119,7 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 ## 1.7.0 - Platform And Tooling Expansion
 
 - Broaden verification across supported iOS and macOS floors, current Xcode versions, and documentation publishing paths.
-- Add richer catalog flows for identity, user properties, screen lifecycle, adapter previews, and failure scenarios.
+- Add richer catalog flows for identity subjects, screen lifecycle, adapter previews, and failure scenarios.
 - Improve public release checklists for tags, GitHub releases, DocC archives, and migration notes.
 
 **Needs deeper review:**

@@ -29,60 +29,41 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
 
+      - name: Build symbol graphs
+        run: |
+          swift package dump-symbol-graph
+          find .build -type f -name 'ACLoggingPackageTests*.symbols.json' -delete
+
       - name: Build DocC archive
         run: |
-          xcodebuild docbuild \
-            -scheme ACLogging \
-            -destination "generic/platform=iOS" \
-            -derivedDataPath .derivedData-docs \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO
-
-      - name: Locate DocC archive
-        id: docc
-        run: |
-          archive_path="$(find .derivedData-docs -type d -name 'ACLogging.doccarchive' -print -quit)"
-          if [[ -z "$archive_path" ]]; then
-            echo "Unable to find ACLogging.doccarchive in .derivedData-docs." >&2
+          symbol_graph_dir="$(find .build -type d -name symbolgraph -print -quit)"
+          if [[ -z "$symbol_graph_dir" ]]; then
+            echo "Unable to find generated symbol graphs in .build." >&2
             exit 1
           fi
 
-          echo "archive_path=$archive_path" >> "$GITHUB_OUTPUT"
+          xcrun docc convert Sources/ACLogging/ACLogging.docc \
+            --fallback-display-name ACLogging \
+            --fallback-bundle-identifier com.antoniocasto.ACLogging \
+            --fallback-bundle-version 1.0.0 \
+            --additional-symbol-graph-dir "$symbol_graph_dir" \
+            --output-path .build/ACLogging.doccarchive
 
       - name: Package DocC archive
         run: |
-          tar -czf ACLogging.doccarchive.tar.gz -C "$(dirname "${{ steps.docc.outputs.archive_path }}")" ACLogging.doccarchive
+          tar -czf ACLogging.doccarchive.tar.gz -C .build ACLogging.doccarchive
 
       - name: Transform DocC archive for static hosting
         run: |
-          xcrun docc process-archive transform-for-static-hosting "${{ steps.docc.outputs.archive_path }}" \
+          xcrun docc process-archive transform-for-static-hosting .build/ACLogging.doccarchive \
+            --hosting-base-path ACLogging \
             --output-path ./docs-site
-
-      - name: Redirect root to DocC landing page
-        run: |
-          cat > ./docs-site/index.html <<'HTML'
-          <!doctype html>
-          <html lang="en-US">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <meta http-equiv="refresh" content="0; url=/documentation/aclogging/">
-            <link rel="canonical" href="/documentation/aclogging/">
-            <title>ACLogging Documentation</title>
-            <script>window.location.replace("/documentation/aclogging/");</script>
-          </head>
-          <body>
-            <p><a href="/documentation/aclogging/">ACLogging Documentation</a></p>
-          </body>
-          </html>
-          HTML
 
       - name: Verify documentation site output
         run: |
           test -f ./docs-site/index.html
           test -f ./docs-site/documentation/aclogging/index.html
-          grep -q 'url=/documentation/aclogging/' ./docs-site/index.html
-          grep -q 'var baseUrl = "/"' ./docs-site/documentation/aclogging/index.html
+          test ! -e ./docs-site/documentation/acloggingpackagetests/index.html
 
       - name: Upload DocC archive
         uses: actions/upload-artifact@v4

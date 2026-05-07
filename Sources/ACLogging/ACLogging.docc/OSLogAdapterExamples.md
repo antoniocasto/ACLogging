@@ -2,10 +2,6 @@
 
 Use `ACLoggingOSLog` when you want ACLogging events to appear in Apple's unified logging system.
 
-## Code Reference
-
-This article describes the ACLogging API released in `1.0.0`. Published DocC should be generated from the matching Git tag for the package version being documented.
-
 ## Basic Setup
 
 Create an `OSLogService` and pass it to `LogManager`:
@@ -18,8 +14,7 @@ let manager = LogManager(
     services: [
         OSLogService(
             subsystem: "com.example.app",
-            category: "Analytics",
-            shouldPrintParameters: true
+            category: "Analytics"
         )
     ]
 )
@@ -35,28 +30,45 @@ General events and screen events use the same OSLog formatting path:
 manager.trackEvent(
     eventName: "Onboarding_Skip",
     parameters: ["step": .string("notifications")],
-    logType: .analytic
+    options: LogOptions(logType: .analytic, parameterPrivacy: .private)
 )
 
 manager.trackScreenEvent(
     AnyLoggableEvent(
         eventName: "Home_appear",
-        parameters: nil,
-        logType: .analytic
+        parameters: nil
     )
 )
 ```
 
 ## Parameter Privacy
 
-`OSLogService` currently writes the rendered message with public privacy. Disable parameter printing if values may contain sensitive data:
+`OSLogService` keeps the event name public and applies each event's `LogOptions.parameterPrivacy` to rendered parameters. Parameters are private by default:
 
 ```swift
-let diagnosticsOnlyService = OSLogService(
-    subsystem: "com.example.app",
-    category: "Diagnostics",
-    shouldPrintParameters: false
+manager.trackEvent(
+    eventName: "Diagnostics_Config_Loaded",
+    parameters: ["source": .string("local")],
+    options: LogOptions(logType: .info)
 )
 ```
 
-With parameter printing disabled, the log message contains only the event name.
+Hide parameters when values should not be written to unified logging:
+
+```swift
+manager.trackEvent(
+    eventName: "Account_Delete_Fail",
+    parameters: ["reason": .string("permissionDenied")],
+    options: LogOptions(logType: .warning, parameterPrivacy: .hidden)
+)
+```
+
+Use public parameters only for values that have already passed the app's privacy review:
+
+```swift
+manager.trackEvent(
+    eventName: "Debug_Menu_Opened",
+    parameters: ["source": .string("simulator")],
+    options: LogOptions(logType: .info, parameterPrivacy: .public)
+)
+```

@@ -14,7 +14,7 @@ struct ScreenAppearLoggingModifierTests {
         #expect(event == AnyLoggableEvent(
             eventName: "Home_appear",
             parameters: nil,
-            logType: .analytic
+            options: LogOptions()
         ))
     }
 
@@ -28,7 +28,7 @@ struct ScreenAppearLoggingModifierTests {
         #expect(event == AnyLoggableEvent(
             eventName: "Home_disappear",
             parameters: nil,
-            logType: .analytic
+            options: LogOptions()
         ))
     }
 }

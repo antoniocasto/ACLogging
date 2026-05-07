@@ -1,7 +1,4 @@
 /// A concrete, equatable event wrapper for any loggable event.
-///
-/// Use this type when tests or adapters need value semantics for an event that
-/// was originally supplied as `any LoggableEvent`.
 public struct AnyLoggableEvent: LoggableEvent, Sendable, Equatable {
     /// The stable event name.
     public let eventName: String
@@ -9,18 +6,18 @@ public struct AnyLoggableEvent: LoggableEvent, Sendable, Equatable {
     /// Additional typed values attached to the event.
     public let parameters: LogParameters?
 
-    /// The event category or severity.
-    public let logType: LogType
+    /// Options that describe how logging services should handle the event.
+    public let options: LogOptions
 
     /// Creates an event from its individual values.
     public init(
         eventName: String,
         parameters: LogParameters? = nil,
-        logType: LogType = .analytic
+        options: LogOptions = LogOptions()
     ) {
         self.eventName = eventName
         self.parameters = parameters
-        self.logType = logType
+        self.options = options
     }
 
     /// Creates an event by copying another loggable event.
@@ -28,7 +25,7 @@ public struct AnyLoggableEvent: LoggableEvent, Sendable, Equatable {
         self.init(
             eventName: event.eventName,
             parameters: event.parameters,
-            logType: event.logType
+            options: event.options
         )
     }
 }

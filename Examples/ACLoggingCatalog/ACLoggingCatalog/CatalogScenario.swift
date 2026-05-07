@@ -48,7 +48,7 @@ struct CatalogScenario: Identifiable {
                     "attempt": .int(1),
                     "isEnabled": .bool(true)
                 ],
-                logType: .analytic
+                options: LogOptions(logType: .analytic)
             )
         },
         CatalogScenario(
