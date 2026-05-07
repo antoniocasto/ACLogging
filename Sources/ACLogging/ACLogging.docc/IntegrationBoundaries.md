@@ -2,6 +2,10 @@
 
 Keep logging calls stable in feature code while provider-specific behavior stays inside adapters.
 
+## Code Reference
+
+This article describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC article generated from the matching Git tag for that package version.
+
 ## Core Usage
 
 Create a `LogManager` with one or more services:

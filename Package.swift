@@ -55,6 +55,13 @@ let package = Package(
                 "ACLogging",
                 "ACLoggingOSLog"
             ]
+        ),
+        .testTarget(
+            name: "ACLoggingSwiftUITests",
+            dependencies: [
+                "ACLogging",
+                "ACLoggingSwiftUI"
+            ]
         )
     ]
 )

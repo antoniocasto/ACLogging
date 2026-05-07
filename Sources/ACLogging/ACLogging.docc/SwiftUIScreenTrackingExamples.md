@@ -2,6 +2,10 @@
 
 Use `ACLoggingSwiftUI` to log simple SwiftUI appear and disappear lifecycle events.
 
+## Code Reference
+
+This article describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC article generated from the matching Git tag for that package version.
+
 ## Inject The Manager
 
 Inject a `LogManager` once above the views that need lifecycle logging:
@@ -44,6 +48,8 @@ This emits:
 
 - `Paywall_appear`
 - `Paywall_disappear`
+
+Both lifecycle events use `.analytic` log type and are covered by the `ACLoggingSwiftUITests` target.
 
 ## Missing Manager Behavior
 

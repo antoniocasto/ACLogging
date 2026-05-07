@@ -117,6 +117,8 @@ Remote branch flow:
 
 Documentation should refer to stable releases by version number and tag.
 
+Every DocC page must explicitly state which code version it documents. Before a public release tag exists, the page should say it describes the unreleased API planned for the next release, for example `0.1.0`. After a release is tagged, published DocC must be generated from the matching Git tag and identify that release version.
+
 Examples:
 
 - Installation examples can use `from: "0.1.0"` once the `0.1.0` tag exists.

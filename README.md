@@ -9,7 +9,7 @@ ACLogging is a small Swift Package for provider-agnostic application logging on 
 Documentation:
 - Public documentation lives in [docs/](docs/README.md).
 - Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
-- Hosted docs are not published yet.
+- Hosted DocC publication is configured through GitHub Pages and will become available after the first `main` deployment.
 - Current public package release: not tagged yet; planned initial release is `0.1.0`.
 
 ## Why ACLogging
@@ -83,6 +83,15 @@ dependencies: [
 ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `0.1.0`, without a leading `v`.
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
+
+## Release Readiness
+
+The repository is structured for a public Swift Package release:
+
+- Required public repository files are present: `README.md`, `LICENSE.md`, `CHANGELOG.md`, and `docs/`.
+- CI validates package build, `swift test`, and DocC generation on pull requests to `develop` and `main`.
+- The Docs workflow builds the DocC archive and publishes a static documentation site from `main`.
+- Current release target is `0.1.0`; `1.0.0` remains planned for a later stable API milestone after production adoption and migration review.
 
 ## Quick Start
 
@@ -247,6 +256,8 @@ DocC includes focused usage articles for the main integration paths:
 - [SwiftUI screen tracking examples](Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
 - [Testing examples](Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
+Every DocC page must state the code version it describes. Until the first public tag is cut, DocC pages refer to the unreleased API planned for `0.1.0`; after release, published DocC should be generated from the matching Git tag.
+
 ## Event Naming
 
 Use this convention:
@@ -286,6 +297,13 @@ func tracksPaywallStart() {
 }
 ```
 
+Automated package tests cover:
+
+- `LogManager` forwarding behavior.
+- `LogValue` Codable round trips.
+- OSLog type mapping and deterministic parameter formatting.
+- SwiftUI screen lifecycle event creation for `appear` and `disappear`.
+
 ## Development
 
 ```bash
@@ -294,7 +312,15 @@ swift build
 swift test
 ```
 
-DocC validation is performed by the GitHub Actions workflows. Locally, use Xcode's package documentation build when an Apple toolchain with DocC support is selected.
+DocC validation is performed by the GitHub Actions workflows with `xcodebuild docbuild`. For a local documentation sanity check, generate symbol graphs and convert the DocC catalog directly:
+
+```bash
+swift package dump-symbol-graph
+mkdir -p .build/docc
+xcrun docc convert Sources/ACLogging/ACLogging.docc \
+  --additional-symbol-graph-dir .build/arm64-apple-macosx/symbolgraph \
+  --output-path .build/docc/ACLogging.doccarchive
+```
 
 ## Credits
 
