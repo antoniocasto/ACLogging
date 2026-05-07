@@ -1,30 +1,34 @@
 /// Coordinates logging calls across one or more services.
 public final class LogManager: Sendable {
     private let services: [any LogService]
+    private let identityServices: [any LogIdentityService]
 
     /// Creates a manager with the services that should receive every logging call.
-    public init(services: [any LogService] = []) {
+    ///
+    /// Services that also conform to ``LogIdentityService`` are automatically used
+    /// for identity calls. Pass `identityServices` when identity handling is owned
+    /// by separate adapter objects.
+    public init(
+        services: [any LogService] = [],
+        identityServices: [any LogIdentityService] = []
+    ) {
         self.services = services
+        self.identityServices = services.compactMap { service in
+            service as? any LogIdentityService
+        } + identityServices
     }
 
-    /// Associates subsequent logs with a user profile on every service.
-    public func identifyUser(userId: String, name: String? = nil, email: String? = nil) {
-        services.forEach { service in
-            service.identifyUser(userId: userId, name: name, email: email)
+    /// Sets or updates the current identity subject on services that support it.
+    public func identify(_ subject: LogSubject) {
+        identityServices.forEach { service in
+            service.identify(subject)
         }
     }
 
-    /// Adds typed properties to the current user profile on every service.
-    public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool = false) {
-        services.forEach { service in
-            service.addUserProperties(properties, isHighPriority: isHighPriority)
-        }
-    }
-
-    /// Deletes the current user profile from every service when supported.
-    public func deleteUserProfile() {
-        services.forEach { service in
-            service.deleteUserProfile()
+    /// Clears the current identity subject on services that support it.
+    public func clearIdentity() {
+        identityServices.forEach { service in
+            service.clearIdentity()
         }
     }
 

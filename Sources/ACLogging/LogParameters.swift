@@ -1,2 +1,2 @@
-/// A type-safe collection of event or user property values.
+/// A type-safe collection of event or identity subject property values.
 public typealias LogParameters = [String: LogValue]

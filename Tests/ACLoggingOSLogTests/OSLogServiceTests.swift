@@ -68,4 +68,34 @@ struct OSLogServiceTests {
 
         #expect(OSLogService.osLogType(for: event.options.logType) == .fault)
     }
+
+    @Test("supports identity service capability")
+    func supportsIdentityServiceCapability() {
+        let service = OSLogService(subsystem: "com.example.tests", category: "identity")
+        let identityService = service as any LogIdentityService
+
+        identityService.identify(LogSubject(id: "tenant-1", kind: "tenant"))
+        identityService.clearIdentity()
+    }
+
+    @Test("formats identity subject parameters")
+    func formatsIdentitySubjectParameters() {
+        let subject = LogSubject(
+            id: "tenant-1",
+            kind: "tenant",
+            properties: [
+                "role": .string("owner"),
+                "seatCount": .int(12)
+            ]
+        )
+
+        let parameters = OSLogService.parameters(for: subject)
+        let message = OSLogService.message(
+            eventName: "IdentifySubject",
+            parameters: parameters,
+            parameterPrivacy: .private
+        )
+
+        #expect(message == "IdentifySubject id=tenant-1 kind=tenant role=owner seatCount=12")
+    }
 }

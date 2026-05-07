@@ -3,7 +3,7 @@ import Foundation
 import OSLog
 
 /// A log service that writes ACLogging events through Apple's unified logging system.
-public struct OSLogService: LogService {
+public struct OSLogService: LogService, LogIdentityService {
     private let logger: Logger
 
     /// Creates an OSLog-backed service.
@@ -19,40 +19,19 @@ public struct OSLogService: LogService {
         self.logger = Logger(subsystem: resolvedSubsystem, category: category)
     }
 
-    /// Logs a user-identification event.
-    public func identifyUser(userId: String, name: String?, email: String?) {
-        var parameters: LogParameters = ["userId": .string(userId)]
-
-        if let name {
-            parameters["name"] = .string(name)
-        }
-
-        if let email {
-            parameters["email"] = .string(email)
-        }
-
+    /// Logs an identity subject update.
+    public func identify(_ subject: LogSubject) {
         log(
-            name: "IdentifyUser",
-            parameters: parameters,
+            name: "IdentifySubject",
+            parameters: Self.parameters(for: subject),
             options: LogOptions(logType: .info)
         )
     }
 
-    /// Logs user properties.
-    public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
-        var parameters = properties
-        parameters["isHighPriority"] = .bool(isHighPriority)
+    /// Logs an identity subject clearing event.
+    public func clearIdentity() {
         log(
-            name: "AddUserProperties",
-            parameters: parameters,
-            options: LogOptions(logType: .info)
-        )
-    }
-
-    /// Logs a user-profile deletion event.
-    public func deleteUserProfile() {
-        log(
-            name: "DeleteUserProfile",
+            name: "ClearIdentity",
             parameters: nil,
             options: LogOptions(logType: .warning)
         )
@@ -153,6 +132,20 @@ extension OSLogService {
             .sorted { $0.key < $1.key }
             .map { "\($0.key)=\(formattedValue($0.value))" }
             .joined(separator: " ")
+    }
+
+    static func parameters(for subject: LogSubject) -> LogParameters {
+        var parameters = subject.properties
+
+        if let id = subject.id {
+            parameters["id"] = .string(id)
+        }
+
+        if let kind = subject.kind {
+            parameters["kind"] = .string(kind)
+        }
+
+        return parameters
     }
 
     private static func formattedValue(_ value: LogValue) -> String {

@@ -20,7 +20,7 @@ Documentation:
 
 The package is split into focused products:
 
-- `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LoggableEvent`, `LogParameters`, and `LogValue`.
+- `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LogIdentityService`, `LogSubject`, `LoggableEvent`, `LogParameters`, and `LogValue`.
 - `ACLoggingOSLog`: Apple `OSLog` adapter for local development, Console, and unified logging.
 - `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking helpers.
 - `ACLoggingTestSupport`: testing utilities such as `MockLogService`.
@@ -165,21 +165,58 @@ logManager.trackEvent(
 
 The public API uses `LogParameters` and `LogValue`, not `[String: Any]`. This keeps adapter implementations deterministic and avoids runtime type casting.
 
-## User Properties
+## Identity Subjects
 
 ```swift
-logManager.identifyUser(
-    userId: "user-123",
-    name: "Antonio",
-    email: "antonio@example.com"
+logManager.identify(
+    LogSubject(
+        id: "account-123",
+        kind: "account",
+        properties: [
+            "email": .string("antonio@example.com"),
+            "role": .string("owner"),
+            "plan": .string("pro"),
+            "isBetaTester": .bool(true)
+        ]
+    )
 )
 
-logManager.addUserProperties(
-    [
+logManager.clearIdentity()
+```
+
+Identity support is optional. `LogService` only requires event logging, while adapters that can associate events with a subject opt into `LogIdentityService`.
+
+```swift
+public final class AnalyticsIdentityAdapter: LogIdentityService {
+    public func identify(_ subject: LogSubject) {
+        // Convert subject.id, subject.kind, and subject.properties for the provider.
+    }
+
+    public func clearIdentity() {
+        // Clear the provider identity when supported.
+    }
+}
+```
+
+If the same adapter handles events and identity, pass it through `services` and `LogManager` will discover the identity capability. If identity is handled by a separate object, pass it explicitly:
+
+```swift
+let logManager = LogManager(
+    services: [eventService],
+    identityServices: [identityService]
+)
+```
+
+`LogSubject` can represent a user, account, organization, tenant, device, or any app-defined entity:
+
+```swift
+LogSubject(
+    id: "tenant-456",
+    kind: "tenant",
+    properties: [
         "plan": .string("pro"),
-        "isBetaTester": .bool(true)
-    ],
-    isHighPriority: true
+        "seatCount": .int(12)
+    ]
 )
 ```
 
@@ -232,7 +269,7 @@ Run the `ACLoggingCatalog` scheme on an iOS simulator. The catalog demonstrates:
 
 - typed `LoggableEvent` scenarios
 - convenience `trackEvent(eventName:parameters:options:)` calls
-- user identity and property calls
+- optional identity subject calls
 - SwiftUI screen lifecycle logging
 - in-app captured calls through a demo `LogService`
 - OSLog formatting and future adapter slots for Firebase, Mixpanel, and custom providers

@@ -35,26 +35,29 @@ let firstService = MockLogService()
 let secondService = MockLogService()
 let manager = LogManager(services: [firstService, secondService])
 
-manager.deleteUserProfile()
+manager.trackEvent(eventName: "Paywall_View_Start")
 
-#expect(firstService.deleteUserProfileCallCount == 1)
-#expect(secondService.deleteUserProfileCallCount == 1)
+#expect(firstService.trackEventCalls.count == 1)
+#expect(secondService.trackEventCalls.count == 1)
 ```
 
-## Test User Properties
+## Test Identity Subjects
 
 ```swift
-let service = MockLogService()
-let manager = LogManager(services: [service])
+let identityService = MockLogIdentityService()
+let manager = LogManager(identityServices: [identityService])
 
-manager.addUserProperties(
-    [
-        "plan": .string("pro"),
-        "isBetaTester": .bool(true)
-    ],
-    isHighPriority: true
+let subject = LogSubject(
+    id: "account-123",
+    kind: "account",
+    properties: [
+        "plan": .string("pro")
+    ]
 )
 
-#expect(service.addUserPropertiesCalls.first?.isHighPriority == true)
-#expect(service.addUserPropertiesCalls.first?.properties["plan"] == .string("pro"))
+manager.identify(subject)
+manager.clearIdentity()
+
+#expect(identityService.identifyCalls == [.init(subject: subject)])
+#expect(identityService.clearIdentityCallCount == 1)
 ```

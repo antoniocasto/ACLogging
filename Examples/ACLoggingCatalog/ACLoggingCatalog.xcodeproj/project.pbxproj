@@ -12,7 +12,7 @@
 		100000000000000000000103 /* CatalogComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000003 /* CatalogComponents.swift */; };
 		100000000000000000000104 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000004 /* OverviewView.swift */; };
 		100000000000000000000105 /* EventScenariosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000005 /* EventScenariosView.swift */; };
-		100000000000000000000106 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* UserProfileView.swift */; };
+		100000000000000000000106 /* IdentitySubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* IdentitySubjectView.swift */; };
 		100000000000000000000107 /* ScreenLifecycleDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000007 /* ScreenLifecycleDemoView.swift */; };
 		100000000000000000000108 /* AdaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000008 /* AdaptersView.swift */; };
 		100000000000000000000109 /* ConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* ConsoleView.swift */; };
@@ -32,7 +32,7 @@
 		100000000000000000000003 /* CatalogComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogComponents.swift; sourceTree = "<group>"; };
 		100000000000000000000004 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		100000000000000000000005 /* EventScenariosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventScenariosView.swift; sourceTree = "<group>"; };
-		100000000000000000000006 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
+		100000000000000000000006 /* IdentitySubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentitySubjectView.swift; sourceTree = "<group>"; };
 		100000000000000000000007 /* ScreenLifecycleDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLifecycleDemoView.swift; sourceTree = "<group>"; };
 		100000000000000000000008 /* AdaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptersView.swift; sourceTree = "<group>"; };
 		100000000000000000000009 /* ConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleView.swift; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 				100000000000000000000003 /* CatalogComponents.swift */,
 				100000000000000000000004 /* OverviewView.swift */,
 				100000000000000000000005 /* EventScenariosView.swift */,
-				100000000000000000000006 /* UserProfileView.swift */,
+				100000000000000000000006 /* IdentitySubjectView.swift */,
 				100000000000000000000007 /* ScreenLifecycleDemoView.swift */,
 				100000000000000000000008 /* AdaptersView.swift */,
 				100000000000000000000009 /* ConsoleView.swift */,
@@ -178,7 +178,7 @@
 				100000000000000000000103 /* CatalogComponents.swift in Sources */,
 				100000000000000000000104 /* OverviewView.swift in Sources */,
 				100000000000000000000105 /* EventScenariosView.swift in Sources */,
-				100000000000000000000106 /* UserProfileView.swift in Sources */,
+				100000000000000000000106 /* IdentitySubjectView.swift in Sources */,
 				100000000000000000000107 /* ScreenLifecycleDemoView.swift in Sources */,
 				100000000000000000000108 /* AdaptersView.swift in Sources */,
 				100000000000000000000109 /* ConsoleView.swift in Sources */,
