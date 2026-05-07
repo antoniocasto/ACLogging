@@ -12,8 +12,8 @@ struct CatalogRootView: View {
             EventScenariosView(store: store)
                 .tabItem { Label("Events", systemImage: "bolt") }
 
-            UserProfileView(store: store)
-                .tabItem { Label("User", systemImage: "person.crop.circle") }
+            IdentitySubjectView(store: store)
+                .tabItem { Label("Identity", systemImage: "person.crop.circle") }
 
             ScreenLifecycleDemoView(store: store)
                 .tabItem { Label("SwiftUI", systemImage: "rectangle.on.rectangle") }

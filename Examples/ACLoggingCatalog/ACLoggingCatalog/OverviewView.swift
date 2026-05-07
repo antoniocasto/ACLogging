@@ -27,7 +27,7 @@ struct OverviewView: View {
 
                     CatalogSection("SPM Recipe") {
                         Text("""
-                        .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "0.1.0")
+                        .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.0.0")
                         """)
                         .font(.caption.monospaced())
                         .textSelection(.enabled)

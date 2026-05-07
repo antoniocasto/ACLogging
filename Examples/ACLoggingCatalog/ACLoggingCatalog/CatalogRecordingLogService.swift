@@ -1,32 +1,26 @@
 import ACLogging
 import Foundation
 
-final class CatalogRecordingLogService: LogService, @unchecked Sendable {
+final class CatalogRecordingLogService: LogService, LogIdentityService, @unchecked Sendable {
     private weak var store: CatalogLogStore?
 
     init(store: CatalogLogStore) {
         self.store = store
     }
 
-    func identifyUser(userId: String, name: String?, email: String?) {
-        var parameters: LogParameters = ["userId": .string(userId)]
-        if let name {
-            parameters["name"] = .string(name)
+    func identify(_ subject: LogSubject) {
+        var parameters = subject.properties
+        if let id = subject.id {
+            parameters["id"] = .string(id)
         }
-        if let email {
-            parameters["email"] = .string(email)
+        if let kind = subject.kind {
+            parameters["kind"] = .string(kind)
         }
-        record(kind: .identifyUser, name: "identifyUser", parameters: parameters, logType: .info)
+        record(kind: .identifySubject, name: "identify", parameters: parameters, logType: .info)
     }
 
-    func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
-        var parameters = properties
-        parameters["isHighPriority"] = .bool(isHighPriority)
-        record(kind: .addUserProperties, name: "addUserProperties", parameters: parameters, logType: .info)
-    }
-
-    func deleteUserProfile() {
-        record(kind: .deleteUserProfile, name: "deleteUserProfile", parameters: nil, logType: .warning)
+    func clearIdentity() {
+        record(kind: .clearIdentity, name: "clearIdentity", parameters: nil, logType: .warning)
     }
 
     func trackEvent(_ event: any LoggableEvent) {
@@ -38,7 +32,7 @@ final class CatalogRecordingLogService: LogService, @unchecked Sendable {
     }
 
     private func record(kind: CatalogLogEntry.Kind, event: any LoggableEvent) {
-        record(kind: kind, name: event.eventName, parameters: event.parameters, logType: event.logType)
+        record(kind: kind, name: event.eventName, parameters: event.parameters, logType: event.options.logType)
     }
 
     private func record(

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AdaptersView: View {
     let store: CatalogLogStore
-    @State private var shouldPrintParameters = true
+    @State private var parameterPrivacy = LogParameterPrivacy.private
 
     var body: some View {
         NavigationStack {
@@ -12,37 +12,41 @@ struct AdaptersView: View {
                     adapter(
                         name: "In-app recorder",
                         status: "Enabled",
-                        detail: "Captures every LogService call for visible feedback.",
-                        capabilities: "Events, screens, identity, properties, delete"
+                        detail: "Captures event and identity subject calls for visible feedback.",
+                        capabilities: "Events, screens, identity subjects"
                     )
                     adapter(
                         name: "OSLog",
                         status: "Enabled",
                         detail: "Writes to Apple unified logging with deterministic parameter formatting.",
-                        capabilities: "Events, screens, identity, properties, delete"
+                        capabilities: "Events, screens, identity subjects"
                     )
                     adapter(
                         name: "Firebase",
                         status: "Future slot",
                         detail: "Will convert LogValue primitives at the adapter boundary.",
-                        capabilities: "Events, screens, user properties"
+                        capabilities: "Events, screens, optional identity"
                     )
                     adapter(
                         name: "Mixpanel",
                         status: "Future slot",
-                        detail: "Will split event properties and profile properties through the same core API.",
-                        capabilities: "Events, identity, profile properties"
+                        detail: "Will map event parameters and identity subject properties at the adapter boundary.",
+                        capabilities: "Events, optional identity"
                     )
                     adapter(
                         name: "Custom provider",
                         status: "Template",
-                        detail: "Implement LogService and convert LoggableEvent for your provider.",
+                        detail: "Implement LogService, and opt into LogIdentityService only when the provider supports it.",
                         capabilities: "Defined by the service implementation"
                     )
                 }
 
                 Section("OSLog preview") {
-                    Toggle("Print parameters", isOn: $shouldPrintParameters)
+                    Picker("Parameter privacy", selection: $parameterPrivacy) {
+                        Text("Hidden").tag(LogParameterPrivacy.hidden)
+                        Text("Private").tag(LogParameterPrivacy.private)
+                        Text("Public").tag(LogParameterPrivacy.public)
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Formatted message")
                             .font(.caption)
@@ -51,7 +55,7 @@ struct AdaptersView: View {
                             osLogPreviewMessage(
                                 eventName: "Paywall_Purchase_Success",
                                 parameters: previewParameters,
-                                shouldPrintParameters: shouldPrintParameters
+                                parameterPrivacy: parameterPrivacy
                             )
                         )
                         .font(.caption.monospaced())
@@ -61,7 +65,10 @@ struct AdaptersView: View {
                         store.logManager.trackEvent(
                             eventName: "Adapters_OSLog_Preview",
                             parameters: previewParameters,
-                            logType: .info
+                            options: LogOptions(
+                                logType: .info,
+                                parameterPrivacy: parameterPrivacy
+                            )
                         )
                     } label: {
                         Label("Send OSLog preview event", systemImage: "waveform")
@@ -90,9 +97,9 @@ struct AdaptersView: View {
     private func osLogPreviewMessage(
         eventName: String,
         parameters: LogParameters,
-        shouldPrintParameters: Bool
+        parameterPrivacy: LogParameterPrivacy
     ) -> String {
-        guard shouldPrintParameters else {
+        guard parameterPrivacy != .hidden else {
             return eventName
         }
 

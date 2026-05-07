@@ -14,8 +14,6 @@ DocC usage articles live with the package source:
 - [SwiftUI screen tracking examples](../Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
 - [Testing examples](../Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
-Every DocC page must include a `Code Reference` section that names the code version it describes. For released documentation, generate and publish DocC from the matching Git tag.
-
 The core package stays dependency-free. Provider integrations belong in adapter targets so app teams can opt into only the SDKs they need.
 
 ## Release Readiness

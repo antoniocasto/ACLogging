@@ -5,53 +5,57 @@ import Testing
 
 @Suite("LogManager")
 struct LogManagerTests {
-    @Test("identifyUser forwards to every service")
-    func identifyUserForwardsToEveryService() {
-        let firstService = MockLogService()
-        let secondService = MockLogService()
-        let manager = LogManager(services: [firstService, secondService])
-
-        manager.identifyUser(userId: "user-1", name: "Antonio", email: "antonio@example.com")
-
-        let expectedCall = MockLogService.IdentifyUserCall(
-            userId: "user-1",
-            name: "Antonio",
-            email: "antonio@example.com"
+    @Test("identify forwards subjects only to identity services")
+    func identifyForwardsSubjectsOnlyToIdentityServices() {
+        let eventOnlyService = MockLogService()
+        let identityService = MockLogIdentityService()
+        let manager = LogManager(
+            services: [eventOnlyService],
+            identityServices: [identityService]
         )
-        #expect(firstService.identifyUserCalls == [expectedCall])
-        #expect(secondService.identifyUserCalls == [expectedCall])
+        let subject = LogSubject(
+            id: "account-1",
+            kind: "account",
+            properties: [
+                "email": .string("antonio@example.com"),
+                "plan": .string("pro")
+            ]
+        )
+
+        manager.identify(subject)
+
+        #expect(identityService.identifyCalls == [.init(subject: subject)])
+        #expect(eventOnlyService.trackEventCalls.isEmpty)
+        #expect(eventOnlyService.trackScreenEventCalls.isEmpty)
     }
 
-    @Test("addUserProperties forwards to every service")
-    func addUserPropertiesForwardsToEveryService() {
-        let firstService = MockLogService()
-        let secondService = MockLogService()
-        let manager = LogManager(services: [firstService, secondService])
-        let properties: LogParameters = [
-            "plan": .string("pro"),
-            "priority": .bool(true)
-        ]
-
-        manager.addUserProperties(properties, isHighPriority: true)
-
-        let expectedCall = MockLogService.AddUserPropertiesCall(
-            properties: properties,
-            isHighPriority: true
+    @Test("clearIdentity forwards only to identity services")
+    func clearIdentityForwardsOnlyToIdentityServices() {
+        let eventOnlyService = MockLogService()
+        let identityService = MockLogIdentityService()
+        let manager = LogManager(
+            services: [eventOnlyService],
+            identityServices: [identityService]
         )
-        #expect(firstService.addUserPropertiesCalls == [expectedCall])
-        #expect(secondService.addUserPropertiesCalls == [expectedCall])
+
+        manager.clearIdentity()
+
+        #expect(identityService.clearIdentityCallCount == 1)
+        #expect(eventOnlyService.trackEventCalls.isEmpty)
+        #expect(eventOnlyService.trackScreenEventCalls.isEmpty)
     }
 
-    @Test("deleteUserProfile forwards to every service")
-    func deleteUserProfileForwardsToEveryService() {
-        let firstService = MockLogService()
-        let secondService = MockLogService()
-        let manager = LogManager(services: [firstService, secondService])
+    @Test("identity services are discovered from logging services")
+    func identityServicesAreDiscoveredFromLoggingServices() {
+        let service = MockCombinedLogService()
+        let manager = LogManager(services: [service])
+        let subject = LogSubject(id: "tenant-1", kind: "tenant")
 
-        manager.deleteUserProfile()
+        manager.identify(subject)
+        manager.clearIdentity()
 
-        #expect(firstService.deleteUserProfileCallCount == 1)
-        #expect(secondService.deleteUserProfileCallCount == 1)
+        #expect(service.identifyCalls == [.init(subject: subject)])
+        #expect(service.clearIdentityCallCount == 1)
     }
 
     @Test("trackEvent forwards typed events to every service")
@@ -62,7 +66,7 @@ struct LogManagerTests {
         let event = AnyLoggableEvent(
             eventName: "purchase_completed",
             parameters: ["amount": .double(42.5)],
-            logType: .analytic
+            options: LogOptions(logType: .analytic)
         )
 
         manager.trackEvent(event)
@@ -79,13 +83,13 @@ struct LogManagerTests {
         let expectedEvent = AnyLoggableEvent(
             eventName: "settings_saved",
             parameters: ["section": .string("notifications")],
-            logType: .info
+            options: LogOptions(logType: .info, parameterPrivacy: .hidden)
         )
 
         manager.trackEvent(
             eventName: "settings_saved",
             parameters: ["section": .string("notifications")],
-            logType: .info
+            options: LogOptions(logType: .info, parameterPrivacy: .hidden)
         )
 
         #expect(firstService.trackEventCalls == [.init(event: expectedEvent)])
@@ -100,7 +104,7 @@ struct LogManagerTests {
         let event = AnyLoggableEvent(
             eventName: "home_screen",
             parameters: ["source": .string("tab")],
-            logType: .info
+            options: LogOptions(logType: .info)
         )
 
         manager.trackScreenEvent(event)
@@ -123,5 +127,12 @@ struct LogManagerTests {
         let decoded = try JSONDecoder().decode(LogParameters.self, from: data)
 
         #expect(decoded == parameters)
+    }
+
+    @Test("events use analytic private options by default")
+    func eventsUseAnalyticPrivateOptionsByDefault() {
+        let event = AnyLoggableEvent(eventName: "Paywall_View_Start")
+
+        #expect(event.options == LogOptions(logType: .analytic, parameterPrivacy: .private))
     }
 }

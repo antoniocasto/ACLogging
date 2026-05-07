@@ -2,45 +2,7 @@ import ACLogging
 import Foundation
 
 /// A log service test double that records every received logging call.
-///
-/// Recorded calls are protected by a lock. Public accessors return snapshots in
-/// call order, and existential events are copied into `AnyLoggableEvent` when
-/// they are recorded.
 public final class MockLogService: LogService, @unchecked Sendable {
-    /// A captured identify-user call.
-    public struct IdentifyUserCall: Sendable, Equatable {
-        /// The user identifier supplied to the service.
-        public let userId: String
-
-        /// The optional display name supplied to the service.
-        public let name: String?
-
-        /// The optional email address supplied to the service.
-        public let email: String?
-
-        /// Creates a captured identify-user call.
-        public init(userId: String, name: String?, email: String?) {
-            self.userId = userId
-            self.name = name
-            self.email = email
-        }
-    }
-
-    /// A captured user-properties call.
-    public struct AddUserPropertiesCall: Sendable, Equatable {
-        /// The properties supplied to the service.
-        public let properties: LogParameters
-
-        /// Whether the call was marked as high priority.
-        public let isHighPriority: Bool
-
-        /// Creates a captured user-properties call.
-        public init(properties: LogParameters, isHighPriority: Bool) {
-            self.properties = properties
-            self.isHighPriority = isHighPriority
-        }
-    }
-
     /// A captured event-tracking call.
     public struct TrackEventCall: Sendable, Equatable {
         /// The event supplied to the service.
@@ -64,75 +26,21 @@ public final class MockLogService: LogService, @unchecked Sendable {
     }
 
     private let lock = NSLock()
-    private var storedIdentifyUserCalls: [IdentifyUserCall] = []
-    private var storedAddUserPropertiesCalls: [AddUserPropertiesCall] = []
-    private var storedDeleteUserProfileCallCount = 0
     private var storedTrackEventCalls: [TrackEventCall] = []
     private var storedTrackScreenEventCalls: [TrackScreenEventCall] = []
 
-    /// The recorded identify-user calls.
-    ///
-    /// The returned array is a snapshot.
-    public var identifyUserCalls: [IdentifyUserCall] {
-        lock.withLock { storedIdentifyUserCalls }
-    }
-
-    /// The recorded user-properties calls.
-    ///
-    /// The returned array is a snapshot.
-    public var addUserPropertiesCalls: [AddUserPropertiesCall] {
-        lock.withLock { storedAddUserPropertiesCalls }
-    }
-
-    /// The number of recorded delete-user-profile calls.
-    public var deleteUserProfileCallCount: Int {
-        lock.withLock { storedDeleteUserProfileCallCount }
-    }
-
     /// The recorded general event-tracking calls.
-    ///
-    /// The returned array is a snapshot.
     public var trackEventCalls: [TrackEventCall] {
         lock.withLock { storedTrackEventCalls }
     }
 
     /// The recorded screen-event tracking calls.
-    ///
-    /// The returned array is a snapshot.
     public var trackScreenEventCalls: [TrackScreenEventCall] {
         lock.withLock { storedTrackScreenEventCalls }
     }
 
     /// Creates a mock log service.
     public init() {}
-
-    /// Records an identify-user call.
-    public func identifyUser(userId: String, name: String?, email: String?) {
-        lock.withLock {
-            storedIdentifyUserCalls.append(
-                IdentifyUserCall(userId: userId, name: name, email: email)
-            )
-        }
-    }
-
-    /// Records a user-properties call.
-    public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
-        lock.withLock {
-            storedAddUserPropertiesCalls.append(
-                AddUserPropertiesCall(
-                    properties: properties,
-                    isHighPriority: isHighPriority
-                )
-            )
-        }
-    }
-
-    /// Records a delete-user-profile call.
-    public func deleteUserProfile() {
-        lock.withLock {
-            storedDeleteUserProfileCallCount += 1
-        }
-    }
 
     /// Records a general event-tracking call.
     public func trackEvent(_ event: any LoggableEvent) {
@@ -148,5 +56,99 @@ public final class MockLogService: LogService, @unchecked Sendable {
                 TrackScreenEventCall(event: AnyLoggableEvent(event))
             )
         }
+    }
+}
+
+/// An identity service test double that records every received identity call.
+public final class MockLogIdentityService: LogIdentityService, @unchecked Sendable {
+    /// A captured identify call.
+    public struct IdentifyCall: Sendable, Equatable {
+        /// The identity subject supplied to the service.
+        public let subject: LogSubject
+
+        /// Creates a captured identify call.
+        public init(subject: LogSubject) {
+            self.subject = subject
+        }
+    }
+
+    private let lock = NSLock()
+    private var storedIdentifyCalls: [IdentifyCall] = []
+    private var storedClearIdentityCallCount = 0
+
+    /// The recorded identify calls.
+    public var identifyCalls: [IdentifyCall] {
+        lock.withLock { storedIdentifyCalls }
+    }
+
+    /// The number of recorded clear-identity calls.
+    public var clearIdentityCallCount: Int {
+        lock.withLock { storedClearIdentityCallCount }
+    }
+
+    /// Creates a mock identity service.
+    public init() {}
+
+    /// Records an identify call.
+    public func identify(_ subject: LogSubject) {
+        lock.withLock {
+            storedIdentifyCalls.append(IdentifyCall(subject: subject))
+        }
+    }
+
+    /// Records a clear-identity call.
+    public func clearIdentity() {
+        lock.withLock {
+            storedClearIdentityCallCount += 1
+        }
+    }
+}
+
+/// A test double that records both event and identity calls.
+public final class MockCombinedLogService: LogService, LogIdentityService, @unchecked Sendable {
+    private let logService = MockLogService()
+    private let identityService = MockLogIdentityService()
+
+    /// The recorded identify calls.
+    public var identifyCalls: [MockLogIdentityService.IdentifyCall] {
+        identityService.identifyCalls
+    }
+
+    /// The number of recorded clear-identity calls.
+    public var clearIdentityCallCount: Int {
+        identityService.clearIdentityCallCount
+    }
+
+    /// The recorded general event-tracking calls.
+    public var trackEventCalls: [MockLogService.TrackEventCall] {
+        logService.trackEventCalls
+    }
+
+    /// The recorded screen-event tracking calls.
+    public var trackScreenEventCalls: [MockLogService.TrackScreenEventCall] {
+        logService.trackScreenEventCalls
+    }
+
+    /// Creates a combined mock log and identity service.
+    public init() {}
+
+    /// Records an identify call.
+    public func identify(_ subject: LogSubject) {
+        identityService.identify(subject)
+    }
+
+    /// Records a clear-identity call.
+    public func clearIdentity() {
+        identityService.clearIdentity()
+    }
+
+    /// Records a general event-tracking call.
+    public func trackEvent(_ event: any LoggableEvent) {
+        logService.trackEvent(event)
+    }
+
+    /// Records a screen-event tracking call.
+    public func trackScreenEvent(_ event: any LoggableEvent) {
+        logService.trackScreenEvent(event)
     }
 }

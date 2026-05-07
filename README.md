@@ -20,7 +20,7 @@ Documentation:
 
 The package is split into focused products:
 
-- `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LoggableEvent`, `LogParameters`, and `LogValue`.
+- `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LogIdentityService`, `LogSubject`, `LoggableEvent`, `LogParameters`, and `LogValue`.
 - `ACLoggingOSLog`: Apple `OSLog` adapter for local development, Console, and unified logging.
 - `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking helpers.
 - `ACLoggingTestSupport`: testing utilities such as `MockLogService`.
@@ -84,15 +84,6 @@ ACLogging uses Semantic Versioning for package releases. Documentation, changelo
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
 
-## Release Readiness
-
-The repository is structured for a public Swift Package release:
-
-- Required public repository files are present: `README.md`, `LICENSE.md`, `CHANGELOG.md`, and `docs/`.
-- CI validates package build, `swift test`, and DocC generation on pull requests to `develop` and `main`.
-- The Docs workflow builds the DocC archive and publishes a static documentation site from `main`.
-- Current release target is `1.0.0`, the stable baseline for the public API surface described here.
-
 ## Quick Start
 
 ```swift
@@ -103,14 +94,13 @@ let logManager = LogManager(
     services: [
         OSLogService(
             subsystem: "com.example.app",
-            category: "App",
-            shouldPrintParameters: true
+            category: "App"
         )
     ]
 )
 ```
 
-`OSLogService` accepts an explicit subsystem and falls back to `Bundle.main.bundleIdentifier ?? "ACLogging"` when one is not provided.
+`OSLogService` accepts an explicit subsystem and falls back to `Bundle.main.bundleIdentifier ?? "ACLogging"` when one is not provided. Event parameters are rendered with `.private` privacy by default.
 
 ## Typed Events
 
@@ -149,14 +139,14 @@ enum PaywallEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType {
+    var options: LogOptions {
         switch self {
         case .viewStart:
-            return .info
+            return LogOptions(logType: .info)
         case .purchaseSuccess:
-            return .analytic
+            return LogOptions(logType: .analytic)
         case .purchaseFail:
-            return .warning
+            return LogOptions(logType: .warning, parameterPrivacy: .hidden)
         }
     }
 }
@@ -169,27 +159,64 @@ logManager.trackEvent(PaywallEvent.viewStart(source: "home"))
 logManager.trackEvent(
     eventName: "Settings_Save_Success",
     parameters: ["section": .string("notifications")],
-    logType: .analytic
+    options: LogOptions(logType: .analytic, parameterPrivacy: .private)
 )
 ```
 
 The public API uses `LogParameters` and `LogValue`, not `[String: Any]`. This keeps adapter implementations deterministic and avoids runtime type casting.
 
-## User Properties
+## Identity Subjects
 
 ```swift
-logManager.identifyUser(
-    userId: "user-123",
-    name: "Antonio",
-    email: "antonio@example.com"
+logManager.identify(
+    LogSubject(
+        id: "account-123",
+        kind: "account",
+        properties: [
+            "email": .string("antonio@example.com"),
+            "role": .string("owner"),
+            "plan": .string("pro"),
+            "isBetaTester": .bool(true)
+        ]
+    )
 )
 
-logManager.addUserProperties(
-    [
+logManager.clearIdentity()
+```
+
+Identity support is optional. `LogService` only requires event logging, while adapters that can associate events with a subject opt into `LogIdentityService`.
+
+```swift
+public final class AnalyticsIdentityAdapter: LogIdentityService {
+    public func identify(_ subject: LogSubject) {
+        // Convert subject.id, subject.kind, and subject.properties for the provider.
+    }
+
+    public func clearIdentity() {
+        // Clear the provider identity when supported.
+    }
+}
+```
+
+If the same adapter handles events and identity, pass it through `services` and `LogManager` will discover the identity capability. If identity is handled by a separate object, pass it explicitly:
+
+```swift
+let logManager = LogManager(
+    services: [eventService],
+    identityServices: [identityService]
+)
+```
+
+`LogSubject` can represent a user, account, organization, tenant, device, or any app-defined entity:
+
+```swift
+LogSubject(
+    id: "tenant-456",
+    kind: "tenant",
+    properties: [
         "plan": .string("pro"),
-        "isBetaTester": .bool(true)
-    ],
-    isHighPriority: true
+        "seatCount": .int(12)
+    ]
 )
 ```
 
@@ -241,8 +268,8 @@ Examples/ACLoggingCatalog/ACLoggingCatalog.xcodeproj
 Run the `ACLoggingCatalog` scheme on an iOS simulator. The catalog demonstrates:
 
 - typed `LoggableEvent` scenarios
-- convenience `trackEvent(eventName:parameters:logType:)` calls
-- user identity and property calls
+- convenience `trackEvent(eventName:parameters:options:)` calls
+- optional identity subject calls
 - SwiftUI screen lifecycle logging
 - in-app captured calls through a demo `LogService`
 - OSLog formatting and future adapter slots for Firebase, Mixpanel, and custom providers
@@ -255,8 +282,6 @@ DocC includes focused usage articles for the main integration paths:
 - [OSLog adapter examples](Sources/ACLogging/ACLogging.docc/OSLogAdapterExamples.md)
 - [SwiftUI screen tracking examples](Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
 - [Testing examples](Sources/ACLogging/ACLogging.docc/TestingExamples.md)
-
-Every DocC page must state the code version it describes. Published DocC should be generated from the matching Git tag for the release being documented.
 
 ## Event Naming
 
@@ -297,13 +322,6 @@ func tracksPaywallStart() {
 }
 ```
 
-Automated package tests cover:
-
-- `LogManager` forwarding behavior.
-- `LogValue` Codable round trips.
-- OSLog type mapping and deterministic parameter formatting.
-- SwiftUI screen lifecycle event creation for `appear` and `disappear`.
-
 ## Development
 
 ```bash
@@ -312,15 +330,7 @@ swift build
 swift test
 ```
 
-DocC validation is performed by the GitHub Actions workflows with `xcodebuild docbuild`. For a local documentation sanity check, generate symbol graphs and convert the DocC catalog directly:
-
-```bash
-swift package dump-symbol-graph
-mkdir -p .build/docc
-xcrun docc convert Sources/ACLogging/ACLogging.docc \
-  --additional-symbol-graph-dir .build/arm64-apple-macosx/symbolgraph \
-  --output-path .build/docc/ACLogging.doccarchive
-```
+DocC validation is performed by the GitHub Actions workflows. Locally, use Xcode's package documentation build when an Apple toolchain with DocC support is selected.
 
 ## Credits
 

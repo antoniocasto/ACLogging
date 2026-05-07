@@ -7,9 +7,10 @@ import Observation
 @Observable
 final class CatalogLogStore {
     var entries: [CatalogLogEntry] = []
-    var currentUserID = "catalog-user-001"
-    var currentUserName = "Catalog Tester"
-    var currentUserEmail = "catalog@example.com"
+    var subjectID = "catalog-account-001"
+    var subjectKind = "account"
+    var subjectEmail = "catalog@example.com"
+    var subjectRole = "owner"
     var plan = "pro"
     var isBetaTester = true
 
@@ -22,8 +23,7 @@ final class CatalogLogStore {
             recordingService,
             OSLogService(
                 subsystem: "com.antoniocasto.ACLoggingCatalog",
-                category: "Catalog",
-                shouldPrintParameters: true
+                category: "Catalog"
             )
         ]
     )
