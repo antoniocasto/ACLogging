@@ -39,13 +39,13 @@ public final class LogManager: Sendable {
     public func trackEvent(
         eventName: String,
         parameters: LogParameters? = nil,
-        logType: LogType = .analytic
+        options: LogOptions = LogOptions()
     ) {
         trackEvent(
             AnyLoggableEvent(
                 eventName: eventName,
                 parameters: parameters,
-                logType: logType
+                options: options
             )
         )
     }

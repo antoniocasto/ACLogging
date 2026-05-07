@@ -7,6 +7,7 @@
 - `LogManager` forwards calls to one or more services.
 - `LogService` is implemented by adapters.
 - `LoggableEvent` describes typed events.
+- `LogOptions` describes event handling, including log type and parameter privacy.
 - `LogParameters` and `LogValue` keep parameters explicit and deterministic.
 
 The core target should not import provider SDKs, `OSLog`, SwiftUI, Firebase, or Mixpanel.
@@ -33,7 +34,7 @@ Log type mapping:
 - `.warning` maps to `OSLogType.error`
 - `.severe` maps to `OSLogType.fault`
 
-Parameters are sorted by key before formatting so tests and console output are stable.
+Parameters are sorted by key before formatting so tests and console output are stable. Event names are written as public OSLog values, while rendered parameters follow each event's `LogOptions.parameterPrivacy`.
 
 ## SwiftUI
 

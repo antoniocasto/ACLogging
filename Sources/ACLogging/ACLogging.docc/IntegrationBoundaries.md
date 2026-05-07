@@ -27,7 +27,9 @@ enum PaywallEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType { .analytic }
+    var options: LogOptions {
+        LogOptions(logType: .analytic, parameterPrivacy: .private)
+    }
 }
 ```
 

@@ -62,7 +62,7 @@ struct LogManagerTests {
         let event = AnyLoggableEvent(
             eventName: "purchase_completed",
             parameters: ["amount": .double(42.5)],
-            logType: .analytic
+            options: LogOptions(logType: .analytic)
         )
 
         manager.trackEvent(event)
@@ -79,13 +79,13 @@ struct LogManagerTests {
         let expectedEvent = AnyLoggableEvent(
             eventName: "settings_saved",
             parameters: ["section": .string("notifications")],
-            logType: .info
+            options: LogOptions(logType: .info, parameterPrivacy: .hidden)
         )
 
         manager.trackEvent(
             eventName: "settings_saved",
             parameters: ["section": .string("notifications")],
-            logType: .info
+            options: LogOptions(logType: .info, parameterPrivacy: .hidden)
         )
 
         #expect(firstService.trackEventCalls == [.init(event: expectedEvent)])
@@ -100,7 +100,7 @@ struct LogManagerTests {
         let event = AnyLoggableEvent(
             eventName: "home_screen",
             parameters: ["source": .string("tab")],
-            logType: .info
+            options: LogOptions(logType: .info)
         )
 
         manager.trackScreenEvent(event)
@@ -123,5 +123,12 @@ struct LogManagerTests {
         let decoded = try JSONDecoder().decode(LogParameters.self, from: data)
 
         #expect(decoded == parameters)
+    }
+
+    @Test("events use analytic private options by default")
+    func eventsUseAnalyticPrivateOptionsByDefault() {
+        let event = AnyLoggableEvent(eventName: "Paywall_View_Start")
+
+        #expect(event.options == LogOptions(logType: .analytic, parameterPrivacy: .private))
     }
 }

@@ -39,8 +39,7 @@ public struct ScreenAppearLoggingModifier: ViewModifier {
     private func trackScreenEvent(suffix: String) {
         let event = AnyLoggableEvent(
             eventName: "\(name)_\(suffix)",
-            parameters: nil,
-            logType: .analytic
+            parameters: nil
         )
         logManager?.trackScreenEvent(event)
     }

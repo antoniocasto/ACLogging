@@ -94,14 +94,13 @@ let logManager = LogManager(
     services: [
         OSLogService(
             subsystem: "com.example.app",
-            category: "App",
-            shouldPrintParameters: true
+            category: "App"
         )
     ]
 )
 ```
 
-`OSLogService` accepts an explicit subsystem and falls back to `Bundle.main.bundleIdentifier ?? "ACLogging"` when one is not provided.
+`OSLogService` accepts an explicit subsystem and falls back to `Bundle.main.bundleIdentifier ?? "ACLogging"` when one is not provided. Event parameters are rendered with `.private` privacy by default.
 
 ## Typed Events
 
@@ -140,14 +139,14 @@ enum PaywallEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType {
+    var options: LogOptions {
         switch self {
         case .viewStart:
-            return .info
+            return LogOptions(logType: .info)
         case .purchaseSuccess:
-            return .analytic
+            return LogOptions(logType: .analytic)
         case .purchaseFail:
-            return .warning
+            return LogOptions(logType: .warning, parameterPrivacy: .hidden)
         }
     }
 }
@@ -160,7 +159,7 @@ logManager.trackEvent(PaywallEvent.viewStart(source: "home"))
 logManager.trackEvent(
     eventName: "Settings_Save_Success",
     parameters: ["section": .string("notifications")],
-    logType: .analytic
+    options: LogOptions(logType: .analytic, parameterPrivacy: .private)
 )
 ```
 
@@ -232,7 +231,7 @@ Examples/ACLoggingCatalog/ACLoggingCatalog.xcodeproj
 Run the `ACLoggingCatalog` scheme on an iOS simulator. The catalog demonstrates:
 
 - typed `LoggableEvent` scenarios
-- convenience `trackEvent(eventName:parameters:logType:)` calls
+- convenience `trackEvent(eventName:parameters:options:)` calls
 - user identity and property calls
 - SwiftUI screen lifecycle logging
 - in-app captured calls through a demo `LogService`

@@ -17,7 +17,7 @@ func tracksPaywallStart() {
     manager.trackEvent(
         eventName: "Paywall_View_Start",
         parameters: ["source": .string("home")],
-        logType: .analytic
+        options: LogOptions(logType: .analytic)
     )
 
     #expect(service.trackEventCalls.count == 1)

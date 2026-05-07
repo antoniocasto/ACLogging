@@ -38,7 +38,7 @@ final class CatalogRecordingLogService: LogService, @unchecked Sendable {
     }
 
     private func record(kind: CatalogLogEntry.Kind, event: any LoggableEvent) {
-        record(kind: kind, name: event.eventName, parameters: event.parameters, logType: event.logType)
+        record(kind: kind, name: event.eventName, parameters: event.parameters, logType: event.options.logType)
     }
 
     private func record(

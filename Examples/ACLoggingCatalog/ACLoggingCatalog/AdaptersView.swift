@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AdaptersView: View {
     let store: CatalogLogStore
-    @State private var shouldPrintParameters = true
+    @State private var parameterPrivacy = LogParameterPrivacy.private
 
     var body: some View {
         NavigationStack {
@@ -42,7 +42,11 @@ struct AdaptersView: View {
                 }
 
                 Section("OSLog preview") {
-                    Toggle("Print parameters", isOn: $shouldPrintParameters)
+                    Picker("Parameter privacy", selection: $parameterPrivacy) {
+                        Text("Hidden").tag(LogParameterPrivacy.hidden)
+                        Text("Private").tag(LogParameterPrivacy.private)
+                        Text("Public").tag(LogParameterPrivacy.public)
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Formatted message")
                             .font(.caption)
@@ -51,7 +55,7 @@ struct AdaptersView: View {
                             osLogPreviewMessage(
                                 eventName: "Paywall_Purchase_Success",
                                 parameters: previewParameters,
-                                shouldPrintParameters: shouldPrintParameters
+                                parameterPrivacy: parameterPrivacy
                             )
                         )
                         .font(.caption.monospaced())
@@ -61,7 +65,10 @@ struct AdaptersView: View {
                         store.logManager.trackEvent(
                             eventName: "Adapters_OSLog_Preview",
                             parameters: previewParameters,
-                            logType: .info
+                            options: LogOptions(
+                                logType: .info,
+                                parameterPrivacy: parameterPrivacy
+                            )
                         )
                     } label: {
                         Label("Send OSLog preview event", systemImage: "waveform")
@@ -90,9 +97,9 @@ struct AdaptersView: View {
     private func osLogPreviewMessage(
         eventName: String,
         parameters: LogParameters,
-        shouldPrintParameters: Bool
+        parameterPrivacy: LogParameterPrivacy
     ) -> String {
-        guard shouldPrintParameters else {
+        guard parameterPrivacy != .hidden else {
             return eventName
         }
 

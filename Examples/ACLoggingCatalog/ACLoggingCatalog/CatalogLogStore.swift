@@ -22,8 +22,7 @@ final class CatalogLogStore {
             recordingService,
             OSLogService(
                 subsystem: "com.antoniocasto.ACLoggingCatalog",
-                category: "Catalog",
-                shouldPrintParameters: true
+                category: "Catalog"
             )
         ]
     )

@@ -17,9 +17,12 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 - Versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and roadmap planning.
 - SPM package compliance documentation, DocC catalog, and roadmap.
 - Public logo asset and usage-focused DocC articles for typed events, OSLog, SwiftUI screen tracking, and testing.
+- `LogOptions` and `LogParameterPrivacy` for per-event log type and parameter privacy handling.
 
 ### Changed
 
 - Release tag policy uses `X.Y.Z` tags without a leading `v`.
+- `LoggableEvent` now exposes `options` instead of a direct `logType` property.
+- `OSLogService` now applies parameter privacy per event instead of using a service-wide parameter printing flag.
 
 ### Fixed

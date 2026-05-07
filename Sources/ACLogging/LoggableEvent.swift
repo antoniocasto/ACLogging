@@ -6,6 +6,13 @@ public protocol LoggableEvent: Sendable {
     /// Additional typed values attached to the event.
     var parameters: LogParameters? { get }
 
-    /// The event category or severity.
-    var logType: LogType { get }
+    /// Options that describe how logging services should handle the event.
+    var options: LogOptions { get }
+}
+
+public extension LoggableEvent {
+    /// Default event handling options.
+    var options: LogOptions {
+        LogOptions()
+    }
 }

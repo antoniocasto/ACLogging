@@ -5,22 +5,18 @@ import OSLog
 /// A log service that writes ACLogging events through Apple's unified logging system.
 public struct OSLogService: LogService {
     private let logger: Logger
-    private let shouldPrintParameters: Bool
 
     /// Creates an OSLog-backed service.
     ///
     /// - Parameters:
     ///   - subsystem: The unified logging subsystem. Defaults to the app bundle identifier, then `ACLogging`.
     ///   - category: The unified logging category.
-    ///   - shouldPrintParameters: Whether event and user parameters should be included in public log messages.
     public init(
         subsystem: String? = nil,
-        category: String = "default",
-        shouldPrintParameters: Bool = true
+        category: String = "default"
     ) {
         let resolvedSubsystem = subsystem ?? Bundle.main.bundleIdentifier ?? "ACLogging"
         self.logger = Logger(subsystem: resolvedSubsystem, category: category)
-        self.shouldPrintParameters = shouldPrintParameters
     }
 
     /// Logs a user-identification event.
@@ -35,27 +31,36 @@ public struct OSLogService: LogService {
             parameters["email"] = .string(email)
         }
 
-        log(name: "IdentifyUser", parameters: parameters, type: .info)
+        log(
+            name: "IdentifyUser",
+            parameters: parameters,
+            options: LogOptions(logType: .info)
+        )
     }
 
     /// Logs user properties.
     public func addUserProperties(_ properties: LogParameters, isHighPriority: Bool) {
         var parameters = properties
         parameters["isHighPriority"] = .bool(isHighPriority)
-        log(name: "AddUserProperties", parameters: parameters, type: .info)
+        log(
+            name: "AddUserProperties",
+            parameters: parameters,
+            options: LogOptions(logType: .info)
+        )
     }
 
     /// Logs a user-profile deletion event.
     public func deleteUserProfile() {
-        log(name: "DeleteUserProfile", parameters: [:], type: .warning)
+        log(
+            name: "DeleteUserProfile",
+            parameters: nil,
+            options: LogOptions(logType: .warning)
+        )
     }
 
     /// Logs a general event using the event's log type.
     public func trackEvent(_ event: any LoggableEvent) {
-        logger.log(
-            level: Self.osLogType(for: event.logType),
-            "\(Self.message(for: event, shouldPrintParameters: shouldPrintParameters), privacy: .public)"
-        )
+        log(name: event.eventName, parameters: event.parameters, options: event.options)
     }
 
     /// Logs a screen event using the same formatting as general events.
@@ -63,11 +68,26 @@ public struct OSLogService: LogService {
         trackEvent(event)
     }
 
-    private func log(name: String, parameters: LogParameters, type: LogType) {
-        logger.log(
-            level: Self.osLogType(for: type),
-            "\(Self.message(eventName: name, parameters: parameters, shouldPrintParameters: shouldPrintParameters), privacy: .public)"
+    private func log(name: String, parameters: LogParameters?, options: LogOptions) {
+        let level = Self.osLogType(for: options.logType)
+        let formattedParameters = Self.formattedParameters(
+            parameters,
+            parameterPrivacy: options.parameterPrivacy
         )
+
+        guard let formattedParameters else {
+            logger.log(level: level, "\(name, privacy: .public)")
+            return
+        }
+
+        switch options.parameterPrivacy {
+        case .hidden:
+            logger.log(level: level, "\(name, privacy: .public)")
+        case .private:
+            logger.log(level: level, "\(name, privacy: .public) \(formattedParameters, privacy: .private)")
+        case .public:
+            logger.log(level: level, "\(name, privacy: .public) \(formattedParameters, privacy: .public)")
+        }
     }
 }
 
@@ -85,33 +105,47 @@ extension OSLogService {
         }
     }
 
-    static func message(for event: any LoggableEvent, shouldPrintParameters: Bool) -> String {
+    static func message(for event: any LoggableEvent) -> String {
         message(
             eventName: event.eventName,
             parameters: event.parameters,
-            shouldPrintParameters: shouldPrintParameters
+            parameterPrivacy: event.options.parameterPrivacy
         )
     }
 
     static func message(
         eventName: String,
         parameters: LogParameters?,
-        shouldPrintParameters: Bool
+        parameterPrivacy: LogParameterPrivacy
     ) -> String {
-        guard shouldPrintParameters else {
-            return eventName
-        }
-
-        guard let parameters else {
-            return eventName
-        }
-
-        let formattedParameters = formattedParameters(parameters)
-        guard !formattedParameters.isEmpty else {
+        guard let formattedParameters = formattedParameters(
+            parameters,
+            parameterPrivacy: parameterPrivacy
+        ) else {
             return eventName
         }
 
         return "\(eventName) \(formattedParameters)"
+    }
+
+    static func formattedParameters(
+        _ parameters: LogParameters?,
+        parameterPrivacy: LogParameterPrivacy
+    ) -> String? {
+        guard parameterPrivacy != .hidden else {
+            return nil
+        }
+
+        guard let parameters else {
+            return nil
+        }
+
+        let formattedParameters = formattedParameters(parameters)
+        guard !formattedParameters.isEmpty else {
+            return nil
+        }
+
+        return formattedParameters
     }
 
     static func formattedParameters(_ parameters: LogParameters) -> String {
