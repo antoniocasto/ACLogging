@@ -26,20 +26,19 @@ Make ACLogging a compact, provider-agnostic Swift logging package with a depende
 - The package has focused products for core logging, OSLog, SwiftUI lifecycle logging, and test support.
 - The core target is dependency-free.
 - Public symbols are small and easy to reason about.
-- Swift Testing coverage exists for manager forwarding and OSLog formatting behavior.
+- Swift Testing coverage exists for manager forwarding, OSLog formatting behavior, value encoding, and SwiftUI screen lifecycle event construction.
 - A local SwiftUI catalog app demonstrates supported integration flows.
+- CI and DocC workflows are present for pull request and `main` verification.
 
 ### Current Gaps
 
-- No hosted documentation URL has been published yet.
+- Hosted documentation is configured but still needs a successful `main` deployment URL before README can link to it directly.
 - Firebase, Mixpanel, and other remote analytics adapters are intentionally not implemented.
-- SwiftUI lifecycle behavior is not covered by automated tests yet.
 - There is no released `0.1.0` tag yet.
 
 ## Priorities
 
 - Prepare and tag `0.1.0` after build, test, CI, and DocC validation pass.
-- Add behavior-level tests for `ACLoggingSwiftUI`.
 - Decide whether hosted docs should publish through GitHub Pages for the public repository.
 - Add provider adapter packages only when their dependency and API contracts are clear.
 
@@ -63,10 +62,12 @@ Make ACLogging a compact, provider-agnostic Swift logging package with a depende
 
 - Ship core logging, OSLog adapter, SwiftUI screen lifecycle helper, test support, README, DocC, roadmap, changelog, and CI.
 - Include a public logo asset and usage-focused DocC articles for the primary integration paths.
+- Include automated Swift Testing coverage for core forwarding, OSLog formatting, and SwiftUI lifecycle event construction.
 
 ## 0.2.0 - Planned
 
-- Add automated SwiftUI lifecycle tests and any additive ergonomics discovered during early adoption.
+- Add additive ergonomics discovered during early adoption.
+- Decide whether the SwiftUI helper should support custom appear/disappear event names or parameter injection.
 
 ## 1.0.0 - Planned Stable API
 

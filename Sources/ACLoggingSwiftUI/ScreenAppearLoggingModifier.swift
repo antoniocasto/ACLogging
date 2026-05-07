@@ -1,6 +1,11 @@
 import ACLogging
 import SwiftUI
 
+enum ScreenLifecyclePhase: String {
+    case appear
+    case disappear
+}
+
 private struct ACLoggingLogManagerKey: EnvironmentKey {
     static let defaultValue: LogManager? = nil
 }
@@ -29,20 +34,23 @@ public struct ScreenAppearLoggingModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .onAppear {
-                trackScreenEvent(suffix: "appear")
+                trackScreenEvent(for: .appear)
             }
             .onDisappear {
-                trackScreenEvent(suffix: "disappear")
+                trackScreenEvent(for: .disappear)
             }
     }
 
-    private func trackScreenEvent(suffix: String) {
-        let event = AnyLoggableEvent(
-            eventName: "\(name)_\(suffix)",
+    func screenEvent(for phase: ScreenLifecyclePhase) -> AnyLoggableEvent {
+        AnyLoggableEvent(
+            eventName: "\(name)_\(phase.rawValue)",
             parameters: nil,
             logType: .analytic
         )
-        logManager?.trackScreenEvent(event)
+    }
+
+    private func trackScreenEvent(for phase: ScreenLifecyclePhase) {
+        logManager?.trackScreenEvent(screenEvent(for: phase))
     }
 }
 

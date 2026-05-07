@@ -17,9 +17,12 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 - Versioning and release policy documentation for Semantic Versioning, GitHub tags, changelog entries, and roadmap planning.
 - SPM package compliance documentation, DocC catalog, and roadmap.
 - Public logo asset and usage-focused DocC articles for typed events, OSLog, SwiftUI screen tracking, and testing.
+- Automated `ACLoggingSwiftUI` tests for screen lifecycle event construction.
 
 ### Changed
 
 - Release tag policy uses `X.Y.Z` tags without a leading `v`.
+- Public documentation now describes release readiness, CI, DocC publishing, and test coverage more explicitly.
+- DocC pages now state which code version they describe.
 
 ### Fixed
