@@ -2,10 +2,6 @@
 
 Model analytics and diagnostics as small typed values before sending them to `LogManager`.
 
-## Code Reference
-
-This article describes the ACLogging API released in `1.0.0`. Published DocC should be generated from the matching Git tag for the package version being documented.
-
 ## Paywall Flow
 
 Use one enum per business surface when events share naming and parameter conventions:
@@ -43,14 +39,14 @@ enum PaywallEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType {
+    var options: LogOptions {
         switch self {
         case .viewStart:
-            return .info
+            return LogOptions(logType: .info)
         case .purchaseSuccess:
-            return .analytic
+            return LogOptions(logType: .analytic)
         case .purchaseFail:
-            return .warning
+            return LogOptions(logType: .warning, parameterPrivacy: .hidden)
         }
     }
 }
@@ -67,13 +63,13 @@ manager.trackEvent(PaywallEvent.purchaseSuccess(productId: "pro.monthly", amount
 
 ## Convenience Events
 
-Use `trackEvent(eventName:parameters:logType:)` when a typed event would not add useful structure:
+Use `trackEvent(eventName:parameters:options:)` when a typed event would not add useful structure:
 
 ```swift
 manager.trackEvent(
     eventName: "Settings_Save_Success",
     parameters: ["section": .string("notifications")],
-    logType: .analytic
+    options: LogOptions(logType: .analytic)
 )
 ```
 

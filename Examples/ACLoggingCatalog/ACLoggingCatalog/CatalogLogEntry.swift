@@ -3,9 +3,8 @@ import Foundation
 
 struct CatalogLogEntry: Identifiable, Equatable {
     enum Kind: String, CaseIterable {
-        case identifyUser = "Identify User"
-        case addUserProperties = "User Properties"
-        case deleteUserProfile = "Delete Profile"
+        case identifySubject = "Identify Subject"
+        case clearIdentity = "Clear Identity"
         case trackEvent = "Track Event"
         case trackScreenEvent = "Screen Event"
     }

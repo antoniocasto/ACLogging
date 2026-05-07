@@ -2,10 +2,6 @@
 
 Keep logging calls stable in feature code while provider-specific behavior stays inside adapters.
 
-## Code Reference
-
-This article describes the ACLogging API released in `1.0.0`. Published DocC should be generated from the matching Git tag for the package version being documented.
-
 ## Core Usage
 
 Create a `LogManager` with one or more services:
@@ -31,7 +27,9 @@ enum PaywallEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType { .analytic }
+    var options: LogOptions {
+        LogOptions(logType: .analytic, parameterPrivacy: .private)
+    }
 }
 ```
 

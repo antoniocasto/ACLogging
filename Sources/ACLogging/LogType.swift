@@ -1,7 +1,4 @@
 /// The severity or purpose of a log event.
-///
-/// Adapters map these provider-neutral categories to their destination's
-/// severity or event types.
 public enum LogType: Sendable, Equatable {
     /// Informational runtime logging.
     case info

@@ -74,7 +74,7 @@ struct EventScenariosView: View {
                                 "enabled": .bool(enabled),
                                 "createdAt": .date(Date())
                             ],
-                            logType: selectedLogType
+                            options: LogOptions(logType: selectedLogType)
                         )
                     } label: {
                         Label("Track custom event", systemImage: "paperplane")

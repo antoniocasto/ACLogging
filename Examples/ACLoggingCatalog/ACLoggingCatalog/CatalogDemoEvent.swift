@@ -49,16 +49,16 @@ enum CatalogDemoEvent: LoggableEvent {
         }
     }
 
-    var logType: LogType {
+    var options: LogOptions {
         switch self {
         case .paywallViewStart, .settingsSaveSuccess:
-            return .info
+            return LogOptions(logType: .info)
         case .paywallPurchaseSuccess, .onboardingSkip:
-            return .analytic
+            return LogOptions(logType: .analytic)
         case .checkoutFail:
-            return .warning
+            return LogOptions(logType: .warning)
         case .severeCrashMarker:
-            return .severe
+            return LogOptions(logType: .severe)
         }
     }
 }
