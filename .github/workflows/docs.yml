@@ -58,10 +58,30 @@ jobs:
           xcrun docc process-archive transform-for-static-hosting "${{ steps.docc.outputs.archive_path }}" \
             --output-path ./docs-site
 
+      - name: Redirect root to DocC landing page
+        run: |
+          cat > ./docs-site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en-US">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="refresh" content="0; url=/documentation/aclogging/">
+            <link rel="canonical" href="/documentation/aclogging/">
+            <title>ACLogging Documentation</title>
+            <script>window.location.replace("/documentation/aclogging/");</script>
+          </head>
+          <body>
+            <p><a href="/documentation/aclogging/">ACLogging Documentation</a></p>
+          </body>
+          </html>
+          HTML
+
       - name: Verify documentation site output
         run: |
           test -f ./docs-site/index.html
           test -f ./docs-site/documentation/aclogging/index.html
+          grep -q 'url=/documentation/aclogging/' ./docs-site/index.html
           grep -q 'var baseUrl = "/"' ./docs-site/documentation/aclogging/index.html
 
       - name: Upload DocC archive
