@@ -56,11 +56,13 @@ jobs:
       - name: Transform DocC archive for static hosting
         run: |
           xcrun docc process-archive transform-for-static-hosting "${{ steps.docc.outputs.archive_path }}" \
-            --hosting-base-path ACLogging \
             --output-path ./docs-site
 
       - name: Verify documentation site output
-        run: test -d ./docs-site
+        run: |
+          test -f ./docs-site/index.html
+          test -f ./docs-site/documentation/aclogging/index.html
+          grep -q 'var baseUrl = "/"' ./docs-site/documentation/aclogging/index.html
 
       - name: Upload DocC archive
         uses: actions/upload-artifact@v4
