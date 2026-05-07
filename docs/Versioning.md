@@ -18,23 +18,17 @@ MAJOR.MINOR.PATCH
 
 Examples:
 
-- `0.1.0` in documentation and changelog headings
-- `0.1.0` as the Git tag and GitHub release name
-- `0.2.0-beta.1` for an optional pre-release
+- `1.0.0` in documentation and changelog headings
+- `1.0.0` as the Git tag and GitHub release name
+- `1.1.0-beta.1` for an optional pre-release
 
 ## Semantic Versioning Rules
 
-Use these rules once the package has a stable `1.0.0` release:
+Use these rules for the stable public package line:
 
 - Increment `MAJOR` for breaking public API changes.
 - Increment `MINOR` for backward-compatible features.
 - Increment `PATCH` for backward-compatible fixes and documentation corrections that support an already released version.
-
-Before `1.0.0`, ACLogging is in initial development:
-
-- `0.MINOR.0` may introduce public API changes.
-- `0.MINOR.PATCH` should remain backward-compatible within that minor line.
-- Breaking changes must be called out clearly in `CHANGELOG.md`.
 
 ## Public API Surface
 
@@ -73,7 +67,7 @@ The top section must always be:
 When cutting a release, move relevant entries from `Unreleased` into a dated version section:
 
 ```markdown
-## 0.1.0 - 2026-05-03
+## 1.0.0 - 2026-05-07
 ```
 
 Use these entry groups when helpful:
@@ -88,7 +82,7 @@ Use these entry groups when helpful:
 Every released version must have:
 
 - A matching changelog section.
-- A matching Git tag, for example `0.1.0`.
+- A matching Git tag, for example `1.0.0`.
 - A matching GitHub release, if the repository has a remote.
 
 ## Release Flow
@@ -102,7 +96,7 @@ Local branch flow:
 5. Create an annotated tag from `main`:
 
 ```bash
-git tag -a 0.1.0 -m "Release 0.1.0"
+git tag -a 1.0.0 -m "Release 1.0.0"
 ```
 
 6. Push `main`, `develop`, and the tag when a remote is configured.
@@ -117,12 +111,12 @@ Remote branch flow:
 
 Documentation should refer to stable releases by version number and tag.
 
-Every DocC page must explicitly state which code version it documents. Before a public release tag exists, the page should say it describes the unreleased API planned for the next release, for example `0.1.0`. After a release is tagged, published DocC must be generated from the matching Git tag and identify that release version.
+Every DocC page must explicitly state which code version it documents. Published DocC must be generated from the matching Git tag and identify that release version.
 
 Examples:
 
-- Installation examples can use `from: "0.1.0"` once the `0.1.0` tag exists.
-- Migration notes should name the source and target versions, for example `0.1.x to 0.2.0`.
+- Installation examples can use `from: "1.0.0"` once the `1.0.0` tag exists.
+- Migration notes should name the source and target versions, for example `1.0.x to 1.1.0`.
 - Adapter documentation should state when an adapter was introduced if that matters to package clients.
 
 ## Roadmap Integration
@@ -132,9 +126,9 @@ When `ROADMAP.md` is created, it should use planned milestone versions without p
 Recommended sections:
 
 ```markdown
-## 0.2.0 - Planned
-## 0.3.0 - Planned
-## 1.0.0 - Planned Stable API
+## 1.1.0 - Planned
+## 1.2.0 - Planned
+## 2.0.0 - Planned Major API Review
 ```
 
 The roadmap should describe intent and priority. `CHANGELOG.md` remains the source of truth for released changes.

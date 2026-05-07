@@ -1,4 +1,7 @@
 /// A concrete, equatable event wrapper for any loggable event.
+///
+/// Use this type when tests or adapters need value semantics for an event that
+/// was originally supplied as `any LoggableEvent`.
 public struct AnyLoggableEvent: LoggableEvent, Sendable, Equatable {
     /// The stable event name.
     public let eventName: String

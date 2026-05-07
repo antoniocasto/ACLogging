@@ -7,6 +7,8 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-07
+
 ### Added
 
 - Initial package foundation for provider-agnostic application logging.
@@ -24,5 +26,3 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 - Release tag policy uses `X.Y.Z` tags without a leading `v`.
 - Public documentation now describes release readiness, CI, DocC publishing, and test coverage more explicitly.
 - DocC pages now state which code version they describe.
-
-### Fixed

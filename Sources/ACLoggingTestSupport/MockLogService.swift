@@ -2,6 +2,10 @@ import ACLogging
 import Foundation
 
 /// A log service test double that records every received logging call.
+///
+/// Recorded calls are protected by a lock. Public accessors return snapshots in
+/// call order, and existential events are copied into `AnyLoggableEvent` when
+/// they are recorded.
 public final class MockLogService: LogService, @unchecked Sendable {
     /// A captured identify-user call.
     public struct IdentifyUserCall: Sendable, Equatable {
@@ -67,11 +71,15 @@ public final class MockLogService: LogService, @unchecked Sendable {
     private var storedTrackScreenEventCalls: [TrackScreenEventCall] = []
 
     /// The recorded identify-user calls.
+    ///
+    /// The returned array is a snapshot.
     public var identifyUserCalls: [IdentifyUserCall] {
         lock.withLock { storedIdentifyUserCalls }
     }
 
     /// The recorded user-properties calls.
+    ///
+    /// The returned array is a snapshot.
     public var addUserPropertiesCalls: [AddUserPropertiesCall] {
         lock.withLock { storedAddUserPropertiesCalls }
     }
@@ -82,11 +90,15 @@ public final class MockLogService: LogService, @unchecked Sendable {
     }
 
     /// The recorded general event-tracking calls.
+    ///
+    /// The returned array is a snapshot.
     public var trackEventCalls: [TrackEventCall] {
         lock.withLock { storedTrackEventCalls }
     }
 
     /// The recorded screen-event tracking calls.
+    ///
+    /// The returned array is a snapshot.
     public var trackScreenEventCalls: [TrackScreenEventCall] {
         lock.withLock { storedTrackScreenEventCalls }
     }

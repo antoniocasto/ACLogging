@@ -4,7 +4,7 @@ Build provider-agnostic application logging for Swift apps.
 
 ## Code Reference
 
-This documentation describes the unreleased ACLogging API planned for `0.1.0`. After a public release is tagged, use the DocC documentation generated from the matching Git tag for that package version.
+This documentation describes the ACLogging API released in `1.0.0`. Published DocC should be generated from the matching Git tag for the package version being documented.
 
 ## Overview
 
@@ -12,9 +12,7 @@ This documentation describes the unreleased ACLogging API planned for `0.1.0`. A
 
 ## Package Version
 
-The currently planned public package release is `0.1.0`. No public release tag has been cut yet.
-
-`1.0.0` is reserved for the stable API milestone after production adoption and a documented migration review.
+The current stable public package release is `1.0.0`.
 
 ## Ownership Boundaries
 
