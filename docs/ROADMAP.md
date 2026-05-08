@@ -2,7 +2,7 @@
 
 ## Goal
 
-Grow ACLogging from a compact `1.0.1` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
+Grow ACLogging from a compact `1.0.2` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
 
 ## Locked Decisions
 
@@ -11,9 +11,9 @@ Grow ACLogging from a compact `1.0.1` Swift logging package into a broader `2.0.
 - Public event metadata uses `LogParameters` and `LogValue`, not `[String: Any]`.
 - `LogManager` stays focused on fan-out to configured `LogService` implementations.
 - Delivery, formatting, retry, batching, persistence, and SDK conversion remain adapter responsibilities unless a future major version deliberately changes that contract.
-- Release tags use plain Semantic Versioning such as `1.0.1`, without a leading `v`.
+- Release tags use plain Semantic Versioning such as `1.0.2`, without a leading `v`.
 
-## 1.0.1 Baseline
+## 1.0.2 Baseline
 
 ### Ready Scope
 
@@ -37,12 +37,12 @@ Grow ACLogging from a compact `1.0.1` Swift logging package into a broader `2.0.
 
 - Patch releases contain compatibility fixes, documentation corrections, CI updates, and non-breaking adapter hardening.
 - Minor releases add backward-compatible capabilities, optional products, docs, tests, examples, or adapter packages.
-- Breaking API cleanup after `1.0.1` is reserved for `2.0.0` and must include migration guidance.
+- Breaking API cleanup after `1.0.2` is reserved for `2.0.0` and must include migration guidance.
 - `CHANGELOG.md` remains the source of truth for released changes; this roadmap describes planned direction only.
 
 ## Suggested Release Sequence
 
-## 1.0.1 - Stable Baseline
+## 1.0.2 - Stable Baseline
 
 - Publish the stable core, OSLog adapter, SwiftUI lifecycle helper, test support, documentation, catalog app, CI, and DocC site at `https://aclogging.acasto.dev/`.
 - Treat the current public API surface as source-stable for the 1.x line.
@@ -52,7 +52,7 @@ Grow ACLogging from a compact `1.0.1` Swift logging package into a broader `2.0.
 
 - Fix documentation issues found during first external installation and catalog usage.
 - Harden CI and DocC workflows around the final public repository settings.
-- Add migration notes from pre-1.0 package references to `1.0.1`.
+- Add migration notes from pre-1.0 package references to `1.0.2`.
 - Capture feedback from at least one production integration before expanding the API surface.
 
 ## 1.1.0 - SwiftUI Ergonomics

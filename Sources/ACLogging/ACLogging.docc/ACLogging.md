@@ -8,7 +8,7 @@ Build provider-agnostic application logging for Swift apps.
 
 ## Package Version
 
-The current stable public package release is `1.0.1`.
+The current stable public package release is `1.0.2`.
 
 ## Ownership Boundaries
 

@@ -20,7 +20,7 @@ Hosted DocC documentation is published at [aclogging.acasto.dev](https://acloggi
 
 ## Release Readiness
 
-ACLogging is prepared for its `1.0.1` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, and usage-focused documentation.
+ACLogging is prepared for its `1.0.2` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, and usage-focused documentation.
 
 ## Verification
 
@@ -31,7 +31,7 @@ Before cutting a release, verify:
 - DocC build through CI `xcodebuild docbuild`
 - Local DocC conversion with SwiftPM symbol graphs and `xcrun docc convert`
 - Changelog section for the release version
-- Annotated Git tag using the plain version format, for example `1.0.1`
+- Annotated Git tag using the plain version format, for example `1.0.2`
 
 ## Example Catalog
 
