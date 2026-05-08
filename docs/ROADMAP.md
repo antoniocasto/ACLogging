@@ -2,7 +2,7 @@
 
 ## Goal
 
-Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
+Grow ACLogging from a compact `1.0.1` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
 
 ## Locked Decisions
 
@@ -11,9 +11,9 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 - Public event metadata uses `LogParameters` and `LogValue`, not `[String: Any]`.
 - `LogManager` stays focused on fan-out to configured `LogService` implementations.
 - Delivery, formatting, retry, batching, persistence, and SDK conversion remain adapter responsibilities unless a future major version deliberately changes that contract.
-- Release tags use plain Semantic Versioning such as `1.0.0`, without a leading `v`.
+- Release tags use plain Semantic Versioning such as `1.0.1`, without a leading `v`.
 
-## 1.0.0 Baseline
+## 1.0.1 Baseline
 
 ### Ready Scope
 
@@ -22,6 +22,7 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 - `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking through environment-injected `LogManager`.
 - `ACLoggingTestSupport`: `MockLogService` for deterministic assertions without provider SDKs or network calls.
 - Public documentation: README, DocC articles, adapter guide, event conventions, versioning policy, changelog, and example catalog app.
+- Hosted DocC is published from GitHub Pages at `https://aclogging.acasto.dev/` with the custom domain configured at the site root.
 - Verification: package tests cover core forwarding, `LogValue` Codable round trips, OSLog formatting, and SwiftUI lifecycle event construction.
 
 ### Useful Signals For 1.x Planning
@@ -36,22 +37,22 @@ Grow ACLogging from a compact `1.0.0`-ready Swift logging package into a broader
 
 - Patch releases contain compatibility fixes, documentation corrections, CI updates, and non-breaking adapter hardening.
 - Minor releases add backward-compatible capabilities, optional products, docs, tests, examples, or adapter packages.
-- Breaking API cleanup after `1.0.0` is reserved for `2.0.0` and must include migration guidance.
+- Breaking API cleanup after `1.0.1` is reserved for `2.0.0` and must include migration guidance.
 - `CHANGELOG.md` remains the source of truth for released changes; this roadmap describes planned direction only.
 
 ## Suggested Release Sequence
 
-## 1.0.0 - Stable Baseline
+## 1.0.1 - Stable Baseline
 
-- Publish the stable core, OSLog adapter, SwiftUI lifecycle helper, test support, documentation, catalog app, CI, and DocC site.
+- Publish the stable core, OSLog adapter, SwiftUI lifecycle helper, test support, documentation, catalog app, CI, and DocC site at `https://aclogging.acasto.dev/`.
 - Treat the current public API surface as source-stable for the 1.x line.
-- Confirm hosted DocC URL and update public documentation links after the first successful `main` deployment.
+- Keep hosted DocC available at the custom domain root without requiring an `ACLogging` path prefix.
 
 ## 1.0.x - Stabilization And Adoption Feedback
 
 - Fix documentation issues found during first external installation and catalog usage.
 - Harden CI and DocC workflows around the final public repository settings.
-- Add migration notes from pre-1.0 package references to `1.0.0`.
+- Add migration notes from pre-1.0 package references to `1.0.1`.
 - Capture feedback from at least one production integration before expanding the API surface.
 
 ## 1.1.0 - SwiftUI Ergonomics

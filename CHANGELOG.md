@@ -7,6 +7,14 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-08
+
+### Fixed
+
+- Published DocC for the verified custom domain root at `https://aclogging.acasto.dev/` without an `ACLogging` hosting base path.
+- Added the GitHub Pages `CNAME` artifact and workflow checks that prevent a redirect-based root entrypoint from being published.
+- Updated public release references from `1.0.0` to `1.0.1`.
+
 ## [1.0.0] - 2026-05-07
 
 ### Added

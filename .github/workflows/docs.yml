@@ -29,6 +29,9 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Build DocC archive
         run: |
           xcodebuild docbuild \
@@ -56,13 +59,22 @@ jobs:
       - name: Transform DocC archive for static hosting
         run: |
           xcrun docc process-archive transform-for-static-hosting "${{ steps.docc.outputs.archive_path }}" \
-            --hosting-base-path ACLogging \
             --output-path ./docs-site
+
+      - name: Configure custom domain
+        run: |
+          printf 'aclogging.acasto.dev\n' > ./docs-site/CNAME
+          touch ./docs-site/.nojekyll
 
       - name: Verify documentation site output
         run: |
           test -f ./docs-site/index.html
           test -f ./docs-site/documentation/aclogging/index.html
+          test "$(cat ./docs-site/CNAME)" = "aclogging.acasto.dev"
+          if grep -E 'http-equiv="refresh"|window\.location\.(replace|href)' ./docs-site/index.html; then
+            echo "Root documentation entrypoint must not redirect." >&2
+            exit 1
+          fi
 
       - name: Upload DocC archive
         uses: actions/upload-artifact@v4
@@ -72,7 +84,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./docs-site
 
