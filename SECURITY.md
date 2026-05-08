@@ -2,9 +2,11 @@
 
 ## Supported Versions
 
-ACLogging has not published a stable release yet. Until the initial `0.1.0` tag is cut, security fixes apply to the default development line and will be included in the first public release.
+| Version | Supported |
+| --- | --- |
+| `1.0.x` | Yes |
 
-After public release, supported versions will be documented here by release line.
+Security fixes apply to the current stable `1.0.x` release line unless a future advisory states otherwise.
 
 ## Reporting a Vulnerability
 
