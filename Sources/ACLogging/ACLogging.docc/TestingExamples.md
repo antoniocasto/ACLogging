@@ -2,6 +2,8 @@
 
 Use `ACLoggingTestSupport` to assert logging behavior without sending events to a real provider.
 
+`MockLogService` records every event passed to `trackEvent(_:)` and `trackScreenEvent(_:)`. `MockLogIdentityService` records identity updates and clear calls.
+
 ## Assert Event Forwarding
 
 ```swift
@@ -41,6 +43,25 @@ manager.trackEvent(eventName: "Paywall_View_Start")
 #expect(secondService.trackEventCalls.count == 1)
 ```
 
+## Assert Screen Events
+
+Screen events are recorded separately from general events:
+
+```swift
+let service = MockLogService()
+let manager = LogManager(services: [service])
+
+manager.trackScreenEvent(
+    AnyLoggableEvent(
+        eventName: "Paywall_appear",
+        parameters: nil
+    )
+)
+
+#expect(service.trackScreenEventCalls.count == 1)
+#expect(service.trackScreenEventCalls.first?.event.eventName == "Paywall_appear")
+```
+
 ## Test Identity Subjects
 
 ```swift
@@ -61,3 +82,7 @@ manager.clearIdentity()
 #expect(identityService.identifyCalls == [.init(subject: subject)])
 #expect(identityService.clearIdentityCallCount == 1)
 ```
+
+## Keep Tests Provider-Neutral
+
+Prefer assertions against event names, parameter values, options, and identity subjects. Adapter-specific formatting belongs in adapter tests, not feature tests that only need to prove the app emitted the right event.
