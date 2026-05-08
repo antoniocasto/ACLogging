@@ -11,7 +11,7 @@ Documentation:
 - Public repository documentation lives in [docs/](docs/README.md).
 - Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
 - Hosted DocC publication is configured through GitHub Pages from `main`.
-- Current public package release: `1.0.1`.
+- Current public package release: `1.0.2`.
 
 ## Why ACLogging
 
@@ -46,7 +46,7 @@ Notes:
 
 1. Open `File > Add Package Dependencies...`
 2. Use: `https://github.com/antoniocasto/ACLogging.git`
-3. Pick release version `1.0.1` or later.
+3. Pick release version `1.0.2` or later.
 
 ### `Package.swift`
 
@@ -54,7 +54,7 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.0.1")
+    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.0.2")
 ]
 ```
 
@@ -81,7 +81,7 @@ dependencies: [
 
 ## Versioning
 
-ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `1.0.1`, without a leading `v`.
+ACLogging uses Semantic Versioning for package releases. Documentation, changelog entries, Git tags, and GitHub releases use plain versions such as `1.0.2`, without a leading `v`.
 
 See [Versioning and Releases](docs/Versioning.md) for the release flow, changelog rules, tag format, and future `ROADMAP.md` conventions.
 
