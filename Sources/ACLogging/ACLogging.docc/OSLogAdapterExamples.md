@@ -4,7 +4,7 @@ Use `ACLoggingOSLog` when you want ACLogging events to appear in Apple's unified
 
 ## Basic Setup
 
-Create an `OSLogService` and pass it to `LogManager`:
+Create an `OSLogService` and pass it to `LogManager`. Choose a stable subsystem and category so Console queries remain predictable:
 
 ```swift
 import ACLogging
@@ -21,6 +21,15 @@ let manager = LogManager(
 ```
 
 When `subsystem` is `nil`, `OSLogService` uses `Bundle.main.bundleIdentifier` and falls back to `ACLogging`.
+
+## Log Type Mapping
+
+`OSLogService` maps ACLogging categories to unified logging levels:
+
+- `.info` maps to `OSLogType.info`.
+- `.analytic` maps to `OSLogType.default`.
+- `.warning` maps to `OSLogType.error`.
+- `.severe` maps to `OSLogType.fault`.
 
 ## Logging Events
 
@@ -72,3 +81,21 @@ manager.trackEvent(
     options: LogOptions(logType: .info, parameterPrivacy: .public)
 )
 ```
+
+## Identity Events
+
+`OSLogService` also conforms to `LogIdentityService`. Identity updates are logged as `IdentifySubject` and include the subject `id`, `kind`, and custom properties. Clearing identity logs a `ClearIdentity` event:
+
+```swift
+manager.identify(
+    LogSubject(
+        id: "account-123",
+        kind: "account",
+        properties: ["plan": .string("pro")]
+    )
+)
+
+manager.clearIdentity()
+```
+
+Use identity logging only when unified logging is an appropriate destination for those subject attributes.
