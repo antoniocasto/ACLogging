@@ -43,11 +43,13 @@ fastlane/test_output/
 .netrc
 
 # Local Codex planning artifacts
+.codex/
 .codex-plan.md
 ACLogging_Codex_Prompt.txt
 .superpowers/
 docs/superpowers/
 docs/*plan*.md
+docs/planning/
 plans/
 
 # Archives and generated bundles
