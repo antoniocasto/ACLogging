@@ -18,8 +18,8 @@ MAJOR.MINOR.PATCH
 
 Examples:
 
-- `1.0.1` in documentation and changelog headings
-- `1.0.1` as the Git tag and GitHub release name
+- `1.0.2` in documentation and changelog headings
+- `1.0.2` as the Git tag and GitHub release name
 - `1.1.0-beta.1` for an optional pre-release
 
 ## Semantic Versioning Rules
@@ -67,7 +67,7 @@ The top section must always be:
 When cutting a release, move relevant entries from `Unreleased` into a dated version section:
 
 ```markdown
-## 1.0.1 - 2026-05-08
+## 1.0.2 - 2026-05-08
 ```
 
 Use these entry groups when helpful:
@@ -82,7 +82,7 @@ Use these entry groups when helpful:
 Every released version must have:
 
 - A matching changelog section.
-- A matching Git tag, for example `1.0.1`.
+- A matching Git tag, for example `1.0.2`.
 - A matching GitHub release, if the repository has a remote.
 
 ## Release Flow
@@ -96,7 +96,7 @@ Local branch flow:
 5. Create an annotated tag from `main`:
 
 ```bash
-git tag -a 1.0.1 -m "Release 1.0.1"
+git tag -a 1.0.2 -m "Release 1.0.2"
 ```
 
 6. Push `main`, `develop`, and the tag when a remote is configured.
@@ -115,7 +115,7 @@ Every DocC page must explicitly state which code version it documents. Published
 
 Examples:
 
-- Installation examples can use `from: "1.0.1"` once the `1.0.1` tag exists.
+- Installation examples can use `from: "1.0.2"` once the `1.0.2` tag exists.
 - Migration notes should name the source and target versions, for example `1.0.x to 1.1.0`.
 - Adapter documentation should state when an adapter was introduced if that matters to package clients.
 

@@ -66,6 +66,37 @@ jobs:
           printf 'aclogging.acasto.dev\n' > ./docs-site/CNAME
           touch ./docs-site/.nojekyll
 
+      - name: Add root documentation entrypoint
+        run: |
+          cat > ./docs-site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>ACLogging Documentation</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="canonical" href="https://aclogging.acasto.dev/">
+            <style>
+              html,
+              body,
+              iframe {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border: 0;
+              }
+            </style>
+          </head>
+          <body>
+            <iframe
+              src="/documentation/aclogging/"
+              title="ACLogging Documentation"
+              loading="eager"
+            ></iframe>
+          </body>
+          </html>
+          EOF
+
       - name: Verify documentation site output
         run: |
           test -f ./docs-site/index.html
@@ -75,6 +106,7 @@ jobs:
             echo "Root documentation entrypoint must not redirect." >&2
             exit 1
           fi
+          grep -q 'src="/documentation/aclogging/"' ./docs-site/index.html
 
       - name: Upload DocC archive
         uses: actions/upload-artifact@v4

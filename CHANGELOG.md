@@ -7,6 +7,12 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-05-08
+
+### Fixed
+
+- Replaced the root DocC shell with a non-redirecting root entrypoint that displays the `ACLogging` documentation topic at `https://aclogging.acasto.dev/`.
+
 ## [1.0.1] - 2026-05-08
 
 ### Fixed
