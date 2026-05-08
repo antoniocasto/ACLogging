@@ -16,9 +16,11 @@ DocC usage articles live with the package source:
 
 The core package stays dependency-free. Provider integrations belong in adapter targets so app teams can opt into only the SDKs they need.
 
+Hosted DocC documentation is published at [aclogging.acasto.dev](https://aclogging.acasto.dev/).
+
 ## Release Readiness
 
-ACLogging is being prepared for its `1.0.0` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, and usage-focused documentation.
+ACLogging is prepared for its `1.0.1` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, and usage-focused documentation.
 
 ## Verification
 
@@ -29,7 +31,7 @@ Before cutting a release, verify:
 - DocC build through CI `xcodebuild docbuild`
 - Local DocC conversion with SwiftPM symbol graphs and `xcrun docc convert`
 - Changelog section for the release version
-- Annotated Git tag using the plain version format, for example `1.0.0`
+- Annotated Git tag using the plain version format, for example `1.0.1`
 
 ## Example Catalog
 
