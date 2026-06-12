@@ -12,7 +12,7 @@ Identity support is intentionally separate from event delivery. Services that ca
 
 ## Package Version
 
-The current stable public package release is `1.0.2`.
+The current stable public package release is `1.1.0`.
 
 ## Choose A Product
 
