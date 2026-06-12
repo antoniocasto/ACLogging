@@ -1,3 +1,4 @@
+import ACLogging
 import ACLoggingSwiftUI
 import SwiftUI
 
@@ -12,6 +13,10 @@ struct ScreenLifecycleDemoView: View {
                         TrackedScreen(name: "CatalogPaywall")
                     }
 
+                    NavigationLink("Open configured checkout screen") {
+                        ConfiguredTrackedScreen()
+                    }
+
                     NavigationLink("Open no-op screen without injected manager") {
                         TrackedScreen(name: "NoManagerDemo")
                             .logManager(nil)
@@ -22,6 +27,35 @@ struct ScreenLifecycleDemoView: View {
             }
             .navigationTitle("SwiftUI")
         }
+    }
+}
+
+private struct ConfiguredTrackedScreen: View {
+    private let configuration = ScreenLoggingConfiguration(
+        screenName: "CatalogCheckout",
+        appearEventName: "Checkout_View_Start",
+        disappearEventName: "Checkout_View_End",
+        parameters: [
+            "source": .string("catalog"),
+            "step": .int(2)
+        ],
+        options: LogOptions(logType: .analytic, parameterPrivacy: .public)
+    )
+
+    var body: some View {
+        VStack(spacing: 18) {
+            Image(systemName: "cart")
+                .font(.system(size: 44))
+                .foregroundStyle(.green)
+            Text("CatalogCheckout")
+                .font(.title2.bold())
+            Text("This view uses configured screen event names and shared parameters.")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .navigationTitle("Configured")
+        .screenLogging(configuration)
     }
 }
 
