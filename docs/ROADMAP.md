@@ -2,7 +2,7 @@
 
 ## Goal
 
-Grow ACLogging from a compact `1.0.2` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
+Grow ACLogging from a compact `1.1.0` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
 
 ## Locked Decisions
 
@@ -11,7 +11,7 @@ Grow ACLogging from a compact `1.0.2` Swift logging package into a broader `2.0.
 - Public event metadata uses `LogParameters` and `LogValue`, not `[String: Any]`.
 - `LogManager` stays focused on fan-out to configured `LogService` implementations.
 - Delivery, formatting, retry, batching, persistence, and SDK conversion remain adapter responsibilities unless a future major version deliberately changes that contract.
-- Release tags use plain Semantic Versioning such as `1.0.2`, without a leading `v`.
+- Release tags use plain Semantic Versioning such as `1.1.0`, without a leading `v`.
 
 ## 1.0.2 Baseline
 
@@ -57,13 +57,13 @@ Grow ACLogging from a compact `1.0.2` Swift logging package into a broader `2.0.
 
 ## 1.1.0 - SwiftUI Ergonomics
 
-- Add additive SwiftUI screen tracking configuration where the current fixed `<Screen>_appear` and `<Screen>_disappear` naming is too narrow.
-- Consider custom appear/disappear event names, static parameters, log type override, and a clearer no-manager behavior contract.
-- Extend DocC and catalog scenarios to show recommended SwiftUI navigation and tab integration patterns.
+- Added `ScreenLoggingConfiguration` for custom appear/disappear event names, static parameters, and log options.
+- Kept `screenLogging(name:)` source-compatible with the original `<Screen>_appear` and `<Screen>_disappear` behavior.
+- Extended README, DocC, tests, and the catalog app with configured screen lifecycle examples.
 
 **Needs deeper review:**
 - Decide whether screen tracking should stay lifecycle-based only or include higher-level navigation semantics.
-- Validate naming and parameter customization against real app analytics conventions before committing to public API.
+- Validate higher-level navigation, tab, sheet, and scene semantics against real app analytics conventions before expanding the public API.
 
 ## 1.2.0 - Adapter Authoring Kit
 
