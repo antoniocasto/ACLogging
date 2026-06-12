@@ -15,6 +15,48 @@ enum ScreenLifecyclePhase {
     }
 }
 
+/// Configuration for SwiftUI screen lifecycle logging.
+public struct ScreenLoggingConfiguration: Sendable, Equatable {
+    /// The stable screen name used for default lifecycle event names.
+    public let screenName: String
+
+    /// The explicit event name emitted when the view appears.
+    public let appearEventName: String?
+
+    /// The explicit event name emitted when the view disappears.
+    public let disappearEventName: String?
+
+    /// Static parameters attached to each lifecycle event.
+    public let parameters: LogParameters?
+
+    /// Options attached to each lifecycle event.
+    public let options: LogOptions
+
+    /// Creates a screen lifecycle logging configuration.
+    public init(
+        screenName: String,
+        appearEventName: String? = nil,
+        disappearEventName: String? = nil,
+        parameters: LogParameters? = nil,
+        options: LogOptions = LogOptions()
+    ) {
+        self.screenName = screenName
+        self.appearEventName = appearEventName
+        self.disappearEventName = disappearEventName
+        self.parameters = parameters
+        self.options = options
+    }
+
+    func eventName(for phase: ScreenLifecyclePhase) -> String {
+        switch phase {
+        case .appear:
+            return appearEventName ?? "\(screenName)_\(phase.suffix)"
+        case .disappear:
+            return disappearEventName ?? "\(screenName)_\(phase.suffix)"
+        }
+    }
+}
+
 private struct ACLoggingLogManagerKey: EnvironmentKey {
     static let defaultValue: LogManager? = nil
 }
@@ -30,13 +72,20 @@ private extension EnvironmentValues {
 public struct ScreenAppearLoggingModifier: ViewModifier {
     @Environment(\.acLoggingLogManager) private var logManager
 
-    private let name: String
+    private let configuration: ScreenLoggingConfiguration
 
     /// Creates a screen lifecycle logging modifier.
     ///
     /// - Parameter name: The screen name used as the event prefix.
     public init(name: String) {
-        self.name = name
+        self.init(configuration: ScreenLoggingConfiguration(screenName: name))
+    }
+
+    /// Creates a screen lifecycle logging modifier.
+    ///
+    /// - Parameter configuration: The screen lifecycle logging configuration.
+    public init(configuration: ScreenLoggingConfiguration) {
+        self.configuration = configuration
     }
 
     /// Builds the modified view body.
@@ -51,7 +100,11 @@ public struct ScreenAppearLoggingModifier: ViewModifier {
     }
 
     func screenEvent(for phase: ScreenLifecyclePhase) -> AnyLoggableEvent {
-        AnyLoggableEvent(eventName: "\(name)_\(phase.suffix)", parameters: nil)
+        AnyLoggableEvent(
+            eventName: configuration.eventName(for: phase),
+            parameters: configuration.parameters,
+            options: configuration.options
+        )
     }
 
     private func trackScreenEvent(for phase: ScreenLifecyclePhase) {
@@ -68,5 +121,10 @@ public extension View {
     /// Logs `<name>_appear` and `<name>_disappear` when the view appears and disappears.
     func screenLogging(name: String) -> some View {
         modifier(ScreenAppearLoggingModifier(name: name))
+    }
+
+    /// Logs configured screen lifecycle events when the view appears and disappears.
+    func screenLogging(_ configuration: ScreenLoggingConfiguration) -> some View {
+        modifier(ScreenAppearLoggingModifier(configuration: configuration))
     }
 }

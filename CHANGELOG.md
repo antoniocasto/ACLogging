@@ -7,6 +7,10 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Added `ScreenLoggingConfiguration` for configurable SwiftUI screen lifecycle event names, parameters, and options.
+
 ## [1.0.2] - 2026-05-08
 
 ### Fixed

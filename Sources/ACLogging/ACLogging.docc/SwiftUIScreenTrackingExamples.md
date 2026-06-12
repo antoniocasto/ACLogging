@@ -47,6 +47,32 @@ This emits:
 
 The modifier sends these through `trackScreenEvent(_:)`, so adapters can separate screen lifecycle events from general events if they need different handling.
 
+## Configure Screen Events
+
+Use `ScreenLoggingConfiguration` when a screen needs custom event names, shared parameters, or non-default options:
+
+```swift
+struct PaywallView: View {
+    var body: some View {
+        VStack {
+            Text("Upgrade")
+            Button("Continue") {}
+        }
+        .screenLogging(
+            ScreenLoggingConfiguration(
+                screenName: "Paywall",
+                appearEventName: "Paywall_View_Start",
+                disappearEventName: "Paywall_View_End",
+                parameters: ["source": .string("checkout")],
+                options: LogOptions(logType: .analytic, parameterPrivacy: .private)
+            )
+        )
+    }
+}
+```
+
+When explicit event names are omitted, ACLoggingSwiftUI falls back to `<screenName>_appear` and `<screenName>_disappear`. Configured parameters and options are attached to both lifecycle events.
+
 ## Missing Manager Behavior
 
 If no `LogManager` is injected, the modifier performs no logging. This allows previews and isolated views to use `screenLogging(name:)` without special setup.

@@ -249,6 +249,23 @@ struct PaywallView: View {
 
 This tracks `Paywall_appear` on `onAppear` and `Paywall_disappear` on `onDisappear`. `LogManager` does not need to be `@Observable`.
 
+Use `ScreenLoggingConfiguration` when an app needs provider-specific event names, shared screen parameters, or non-default options:
+
+```swift
+PaywallView()
+    .screenLogging(
+        ScreenLoggingConfiguration(
+            screenName: "Paywall",
+            appearEventName: "Paywall_View_Start",
+            disappearEventName: "Paywall_View_End",
+            parameters: ["source": .string("checkout")],
+            options: LogOptions(logType: .analytic, parameterPrivacy: .private)
+        )
+    )
+```
+
+If no `LogManager` is injected, screen logging is a no-op. This keeps previews and isolated feature views usable without logging setup.
+
 ## Current Limits
 
 - ACLogging does not ship Firebase, Mixpanel, or network-backed adapters yet.
