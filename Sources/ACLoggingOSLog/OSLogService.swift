@@ -1,6 +1,11 @@
 import ACLogging
 import Foundation
+#if canImport(SkipFuse)
+import SkipFuse
+#endif
+#if canImport(OSLog)
 import OSLog
+#endif
 
 /// A log service that writes ACLogging events through Apple's unified logging system.
 public struct OSLogService: LogService, LogIdentityService {
@@ -54,6 +59,7 @@ public struct OSLogService: LogService, LogIdentityService {
             parameterPrivacy: options.parameterPrivacy
         )
 
+#if canImport(OSLog)
         guard let formattedParameters else {
             logger.log(level: level, "\(name, privacy: .public)")
             return
@@ -67,6 +73,13 @@ public struct OSLogService: LogService, LogIdentityService {
         case .public:
             logger.log(level: level, "\(name, privacy: .public) \(formattedParameters, privacy: .public)")
         }
+#else
+        logger.log(level: level, Self.message(
+            eventName: name,
+            parameters: parameters,
+            parameterPrivacy: options.parameterPrivacy
+        ))
+#endif
     }
 }
 

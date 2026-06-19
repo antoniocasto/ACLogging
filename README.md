@@ -4,26 +4,26 @@
 
 # ACLogging
 
-ACLogging is a small Swift Package for provider-agnostic application logging on iOS and macOS.
+ACLogging is a small Swift Package for provider-agnostic application logging in traditional iOS apps, macOS apps, and Skip Fuse apps.
 
 Documentation:
 - Hosted DocC documentation: [aclogging.acasto.dev](https://aclogging.acasto.dev/).
 - Public repository documentation lives in [docs/](docs/README.md).
 - Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
 - Hosted DocC publication is configured through GitHub Pages from `main`.
-- Current public package release: `1.1.0`.
+- Current public package release: `1.1.1`.
 
 ## Why ACLogging
 
 - Keep app logging provider-agnostic so analytics, diagnostics, and screen tracking do not leak vendor SDK types into feature code.
-- Keep the core target dependency-free while adapters opt into platform or provider-specific behavior.
+- Keep the core target free of provider SDKs while adapters opt into platform or provider-specific behavior.
 - Give tests a first-class `MockLogService` so event forwarding can be asserted without network calls or provider SDK setup.
 
 The package is split into focused products:
 
-- `ACLogging`: dependency-free core types, including `LogManager`, `LogService`, `LogIdentityService`, `LogSubject`, `LoggableEvent`, `LogParameters`, and `LogValue`.
-- `ACLoggingOSLog`: Apple `OSLog` adapter for local development, Console, and unified logging.
-- `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking helpers.
+- `ACLogging`: provider-neutral core types, including `LogManager`, `LogService`, `LogIdentityService`, `LogSubject`, `LoggableEvent`, `LogParameters`, and `LogValue`.
+- `ACLoggingOSLog`: `OSLog` adapter for local development, Console, unified logging, and Skip Fuse Logcat-backed logging.
+- `ACLoggingSwiftUI`: SwiftUI and Skip Fuse UI screen lifecycle tracking helpers.
 - `ACLoggingTestSupport`: testing utilities such as `MockLogService`.
 
 Firebase and Mixpanel are intentionally separate future adapters. They should live outside the core so their SDK dependencies never leak into `ACLogging`.
@@ -34,11 +34,16 @@ Firebase and Mixpanel are intentionally separate future adapters. They should li
 - Supported Apple platforms:
   - iOS `17+`
   - macOS `14+`
+- Skip tooling:
+  - Skip `1.7.0+`
+  - SkipFuse `1.0.0+`
+  - SkipFuseUI `1.0.0+`
 
 Notes:
-- `ACLogging` and `ACLoggingTestSupport` are platform-neutral within the package platform floors.
-- `ACLoggingOSLog` depends on Apple's unified logging APIs.
-- `ACLoggingSwiftUI` depends on SwiftUI and is intended for SwiftUI view lifecycle tracking.
+- Source targets include `Skip/skip.yml` with `mode: 'native'` and `bridging: true` for Skip Fuse consumers.
+- `ACLogging` and `ACLoggingTestSupport` remain provider-neutral within the package platform floors.
+- `ACLoggingOSLog` uses `OSLog`; in Skip Fuse builds, `SkipFuse` supplies the Android-compatible logging surface.
+- `ACLoggingSwiftUI` uses SwiftUI on Apple platforms and `SkipFuseUI` in Skip Fuse builds.
 
 ## Installation
 
@@ -46,7 +51,7 @@ Notes:
 
 1. Open `File > Add Package Dependencies...`
 2. Use: `https://github.com/antoniocasto/ACLogging.git`
-3. Pick release version `1.1.0` or later.
+3. Pick release version `1.1.1` or later.
 
 ### `Package.swift`
 
@@ -54,7 +59,7 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.1.0")
+    .package(url: "https://github.com/antoniocasto/ACLogging.git", from: "1.1.1")
 ]
 ```
 
@@ -102,6 +107,26 @@ let logManager = LogManager(
 ```
 
 `OSLogService` accepts an explicit subsystem and falls back to `Bundle.main.bundleIdentifier ?? "ACLogging"` when one is not provided. Event parameters are rendered with `.private` privacy by default.
+
+## Skip Fuse Usage
+
+Use the same package products from a Skip Fuse app target:
+
+```swift
+.target(
+    name: "YourSkipApp",
+    dependencies: [
+        .product(name: "ACLogging", package: "ACLogging"),
+        .product(name: "ACLoggingOSLog", package: "ACLogging"),
+        .product(name: "ACLoggingSwiftUI", package: "ACLogging")
+    ],
+    plugins: [
+        .plugin(name: "skipstone", package: "skip")
+    ]
+)
+```
+
+ACLogging targets are configured as native Skip modules and keep bridging enabled for public APIs. The SwiftUI convenience extension methods remain available to Swift callers, but are excluded from JNI bridging because this Skip release does not bridge Swift extension functions to Kotlin.
 
 ## Typed Events
 
@@ -272,6 +297,7 @@ If no `LogManager` is injected, screen logging is a no-op. This keeps previews a
 - `LogManager` forwards calls synchronously to configured services; queueing, retry, persistence, and batching are adapter responsibilities.
 - `ACLoggingOSLog` is intended for local diagnostics and unified logging, not remote analytics delivery.
 - `ACLoggingSwiftUI` logs `onAppear` and `onDisappear` lifecycle events only; navigation semantics remain owned by the consuming app.
+- Skip Fuse compatibility is validated through `skipstone` generation and Android-side Skip checks; direct Kotlin calls into SwiftUI extension helpers are intentionally not bridged.
 
 ## Catalog App
 
@@ -346,6 +372,8 @@ func tracksPaywallStart() {
 swift package resolve
 swift build
 swift test
+skip checkup --native
+skip android test
 ```
 
 DocC validation is performed by the GitHub Actions workflows. Locally, use Xcode's package documentation build when an Apple toolchain with DocC support is selected.

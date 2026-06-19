@@ -1,7 +1,9 @@
 @testable import ACLoggingOSLog
 import ACLogging
 import Foundation
+#if canImport(OSLog)
 import OSLog
+#endif
 import Testing
 
 @Suite("OSLogService")

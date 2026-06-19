@@ -87,6 +87,14 @@ Every released version must have:
 
 ## Release Flow
 
+## Release History Notes
+
+### 1.1.1 - 2026-06-19
+
+- Patch release for Skip Fuse native compatibility.
+- Adds source-target `Skip/skip.yml` files, Skip package dependencies, `skipstone` plugin wiring, and package configuration tests.
+- Keeps the public logging API source-compatible with `1.1.0`.
+
 Local branch flow:
 
 1. Merge feature work into `develop`.

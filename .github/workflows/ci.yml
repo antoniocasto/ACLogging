@@ -40,14 +40,15 @@ jobs:
             spm-${{ runner.os }}-${{ matrix.xcode }}-
 
       - name: Resolve dependencies
-        run: xcodebuild -resolvePackageDependencies -scheme ACLogging -clonedSourcePackagesDirPath .build
+        run: xcodebuild -resolvePackageDependencies -scheme ACLogging -clonedSourcePackagesDirPath .build -skipPackagePluginValidation
 
       - name: Build
         run: |
           xcodebuild build-for-testing \
             -scheme ACLogging \
             -destination "generic/platform=iOS Simulator" \
-            -clonedSourcePackagesDirPath .build
+            -clonedSourcePackagesDirPath .build \
+            -skipPackagePluginValidation
 
       - name: Test Swift Package
         run: |
@@ -59,6 +60,7 @@ jobs:
             -scheme ACLogging \
             -destination "generic/platform=iOS" \
             -derivedDataPath .derivedData-docs \
+            -skipPackagePluginValidation \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
 
