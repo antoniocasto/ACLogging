@@ -38,6 +38,7 @@ jobs:
             -scheme ACLogging \
             -destination "generic/platform=iOS" \
             -derivedDataPath .derivedData-docs \
+            -skipPackagePluginValidation \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
 
