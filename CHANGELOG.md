@@ -7,6 +7,19 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-06-19
+
+### Added
+
+- Added Skip Fuse native module configuration for source targets.
+- Added Skip package dependencies and `skipstone` plugin wiring so ACLogging can be consumed by Skip Fuse apps.
+- Added package configuration tests covering Skip Fuse manifest and `skip.yml` requirements.
+
+### Changed
+
+- Updated `ACLoggingOSLog` and `ACLoggingSwiftUI` integration points for SkipFuse and SkipFuseUI compatibility while preserving traditional iOS usage.
+- Excluded SwiftUI `View` extension helpers from JNI bridging because current Skip Fuse releases do not bridge Swift extension functions to Kotlin.
+
 ## [1.1.0] - 2026-06-12
 
 ### Added

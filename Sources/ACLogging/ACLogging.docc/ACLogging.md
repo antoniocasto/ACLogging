@@ -1,6 +1,6 @@
 # ``ACLogging``
 
-Build provider-agnostic application logging for Swift apps.
+Build provider-agnostic application logging for Swift and Skip Fuse apps.
 
 ## Overview
 
@@ -8,17 +8,19 @@ Build provider-agnostic application logging for Swift apps.
 
 The core product defines event names, strongly typed ``LogParameters``, ``LogValue`` payloads, event categories through ``LogType``, and privacy intent through ``LogOptions``. Optional products add ready-made integrations for Apple's unified logging system, SwiftUI screen lifecycle tracking, and test doubles.
 
+The package is configured for Skip Fuse native mode. Source targets include `Skip/skip.yml`, use the `skipstone` plugin, and keep bridging enabled for public APIs so the same package can be used from traditional iOS apps and Skip Fuse apps.
+
 Identity support is intentionally separate from event delivery. Services that can associate events with a subject conform to ``LogIdentityService``; destinations that do not support identity can remain simple ``LogService`` implementations.
 
 ## Package Version
 
-The current stable public package release is `1.1.0`.
+The current stable public package release is `1.1.1`.
 
 ## Choose A Product
 
 - `ACLogging`: Use in shared domain, feature, and infrastructure modules to model events without coupling them to a provider SDK.
-- `ACLoggingOSLog`: Use when events should be written to Apple's unified logging system through `OSLogService`.
-- `ACLoggingSwiftUI`: Use when SwiftUI views should emit simple `<screen>_appear` and `<screen>_disappear` lifecycle events.
+- `ACLoggingOSLog`: Use when events should be written through `OSLogService` on Apple platforms or Skip Fuse.
+- `ACLoggingSwiftUI`: Use when SwiftUI or Skip Fuse UI views should emit simple `<screen>_appear` and `<screen>_disappear` lifecycle events.
 - `ACLoggingTestSupport`: Use in tests to assert forwarded events and identity calls without sending data to a real destination.
 
 ## Ownership Boundaries

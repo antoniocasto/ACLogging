@@ -2,11 +2,11 @@
 
 ## Goal
 
-Grow ACLogging from a compact `1.1.0` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, dependency-free, testable, and predictable for iOS and macOS apps.
+Grow ACLogging from a compact `1.1.1` Swift logging package into a broader `2.0.0` logging foundation while keeping the core provider-agnostic, testable, and predictable for traditional iOS apps, macOS apps, and Skip Fuse apps.
 
 ## Locked Decisions
 
-- The core `ACLogging` product must not depend on provider SDKs, `OSLog`, SwiftUI, or app-specific delivery infrastructure.
+- The core `ACLogging` product must not depend on provider SDKs, `OSLog`, SwiftUI, or app-specific delivery infrastructure. SkipFuse is allowed as cross-platform build/runtime infrastructure for Skip compatibility.
 - Adapter products own platform and provider-specific behavior.
 - Public event metadata uses `LogParameters` and `LogValue`, not `[String: Any]`.
 - `LogManager` stays focused on fan-out to configured `LogService` implementations.
@@ -17,13 +17,14 @@ Grow ACLogging from a compact `1.1.0` Swift logging package into a broader `2.0.
 
 ### Ready Scope
 
-- `ACLogging`: dependency-free core types for manager fan-out, services, typed events, event options, optional identity subjects, event values, and log type classification.
-- `ACLoggingOSLog`: Apple unified logging adapter with deterministic parameter formatting and per-event parameter privacy.
-- `ACLoggingSwiftUI`: SwiftUI screen lifecycle tracking through environment-injected `LogManager`.
+- `ACLogging`: provider-neutral core types for manager fan-out, services, typed events, event options, optional identity subjects, event values, and log type classification.
+- `ACLoggingOSLog`: unified logging adapter with deterministic parameter formatting and per-event parameter privacy for Apple platforms and Skip Fuse.
+- `ACLoggingSwiftUI`: SwiftUI and Skip Fuse UI screen lifecycle tracking through environment-injected `LogManager`.
 - `ACLoggingTestSupport`: `MockLogService` for deterministic assertions without provider SDKs or network calls.
 - Public documentation: README, DocC articles, adapter guide, event conventions, versioning policy, changelog, and example catalog app.
 - Hosted DocC is published from GitHub Pages at `https://aclogging.acasto.dev/` with the custom domain configured at the site root.
 - Verification: package tests cover core forwarding, `LogValue` Codable round trips, OSLog formatting, and SwiftUI lifecycle event construction.
+- Skip Fuse compatibility: source targets carry `Skip/skip.yml`, `Package.swift` wires SkipFuse, SkipFuseUI, and `skipstone`, and package tests guard that configuration.
 
 ### Useful Signals For 1.x Planning
 
@@ -64,6 +65,17 @@ Grow ACLogging from a compact `1.1.0` Swift logging package into a broader `2.0.
 **Needs deeper review:**
 - Decide whether screen tracking should stay lifecycle-based only or include higher-level navigation semantics.
 - Validate higher-level navigation, tab, sheet, and scene semantics against real app analytics conventions before expanding the public API.
+
+## 1.1.1 - Skip Fuse Compatibility
+
+- Added native Skip Fuse configuration for ACLogging source targets.
+- Wired SkipFuse, SkipFuseUI, and the `skipstone` plugin into the Swift package manifest.
+- Kept SwiftUI extension helpers available to Swift callers while excluding them from JNI bridging because current Skip Fuse releases do not bridge Swift extension functions to Kotlin.
+- Added package configuration tests that guard the Skip manifest and `skip.yml` setup.
+
+**Needs deeper review:**
+- Validate ACLogging inside a production Skip Fuse app that uses both `ACLoggingOSLog` and `ACLoggingSwiftUI`.
+- Revisit `@nobridge` extension helper exclusions when Skip adds support for bridging Swift extension functions to Kotlin.
 
 ## 1.2.0 - Adapter Authoring Kit
 

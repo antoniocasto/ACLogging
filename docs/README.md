@@ -14,24 +14,26 @@ DocC usage articles live with the package source:
 - [SwiftUI screen tracking examples](../Sources/ACLogging/ACLogging.docc/SwiftUIScreenTrackingExamples.md)
 - [Testing examples](../Sources/ACLogging/ACLogging.docc/TestingExamples.md)
 
-The core package stays dependency-free. Provider integrations belong in adapter targets so app teams can opt into only the SDKs they need.
+The core package stays free of provider SDKs. Provider integrations belong in adapter targets so app teams can opt into only the SDKs they need. SkipFuse is used as cross-platform build/runtime infrastructure for Skip Fuse compatibility.
 
 Hosted DocC documentation is published at [aclogging.acasto.dev](https://aclogging.acasto.dev/).
 
 ## Release Readiness
 
-ACLogging is prepared for its `1.1.0` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, and usage-focused documentation.
+ACLogging is prepared for its `1.1.1` public release. The repository includes the required public package files, CI workflow, DocC workflow, roadmap, changelog, usage-focused documentation, and Skip Fuse native module configuration.
 
 ## Verification
 
 Before cutting a release, verify:
 
 - `swift test`
+- `skip checkup --native`
+- `skip android test`
 - Xcode package build for the supported Apple platform floors
 - DocC build through CI `xcodebuild docbuild`
 - Local DocC conversion with SwiftPM symbol graphs and `xcrun docc convert`
 - Changelog section for the release version
-- Annotated Git tag using the plain version format, for example `1.1.0`
+- Annotated Git tag using the plain version format, for example `1.1.1`
 
 ## Example Catalog
 

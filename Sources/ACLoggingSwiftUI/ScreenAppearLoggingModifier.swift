@@ -1,4 +1,7 @@
 import ACLogging
+#if canImport(SkipFuseUI)
+import SkipFuseUI
+#endif
 import SwiftUI
 
 enum ScreenLifecyclePhase {
@@ -57,11 +60,11 @@ public struct ScreenLoggingConfiguration: Sendable, Equatable {
     }
 }
 
-private struct ACLoggingLogManagerKey: EnvironmentKey {
+struct ACLoggingLogManagerKey: EnvironmentKey {
     static let defaultValue: LogManager? = nil
 }
 
-private extension EnvironmentValues {
+extension EnvironmentValues {
     var acLoggingLogManager: LogManager? {
         get { self[ACLoggingLogManagerKey.self] }
         set { self[ACLoggingLogManagerKey.self] = newValue }
@@ -70,9 +73,9 @@ private extension EnvironmentValues {
 
 /// A SwiftUI modifier that logs screen appear and disappear lifecycle events.
 public struct ScreenAppearLoggingModifier: ViewModifier {
-    @Environment(\.acLoggingLogManager) private var logManager
+    @Environment(\.acLoggingLogManager) var logManager
 
-    private let configuration: ScreenLoggingConfiguration
+    let configuration: ScreenLoggingConfiguration
 
     /// Creates a screen lifecycle logging modifier.
     ///
@@ -114,16 +117,19 @@ public struct ScreenAppearLoggingModifier: ViewModifier {
 
 public extension View {
     /// Injects the log manager used by ACLogging SwiftUI modifiers.
+    // SKIP @nobridge
     func logManager(_ logManager: LogManager?) -> some View {
         environment(\.acLoggingLogManager, logManager)
     }
 
     /// Logs `<name>_appear` and `<name>_disappear` when the view appears and disappears.
+    // SKIP @nobridge
     func screenLogging(name: String) -> some View {
         modifier(ScreenAppearLoggingModifier(name: name))
     }
 
     /// Logs configured screen lifecycle events when the view appears and disappears.
+    // SKIP @nobridge
     func screenLogging(_ configuration: ScreenLoggingConfiguration) -> some View {
         modifier(ScreenAppearLoggingModifier(configuration: configuration))
     }
