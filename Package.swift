@@ -26,21 +26,50 @@ let package = Package(
             targets: ["ACLoggingTestSupport"]
         )
     ],
+    dependencies: [
+        .package(url: "https://source.skip.tools/skip.git", from: "1.7.0"),
+        .package(url: "https://source.skip.tools/skip-fuse.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip-fuse-ui.git", from: "1.0.0")
+    ],
     targets: [
         .target(
-            name: "ACLogging"
+            name: "ACLogging",
+            dependencies: [
+                .product(name: "SkipFuse", package: "skip-fuse")
+            ],
+            plugins: [
+                .plugin(name: "skipstone", package: "skip")
+            ]
         ),
         .target(
             name: "ACLoggingOSLog",
-            dependencies: ["ACLogging"]
+            dependencies: [
+                "ACLogging",
+                .product(name: "SkipFuse", package: "skip-fuse")
+            ],
+            plugins: [
+                .plugin(name: "skipstone", package: "skip")
+            ]
         ),
         .target(
             name: "ACLoggingSwiftUI",
-            dependencies: ["ACLogging"]
+            dependencies: [
+                "ACLogging",
+                .product(name: "SkipFuseUI", package: "skip-fuse-ui", condition: .when(platforms: [.android]))
+            ],
+            plugins: [
+                .plugin(name: "skipstone", package: "skip")
+            ]
         ),
         .target(
             name: "ACLoggingTestSupport",
-            dependencies: ["ACLogging"]
+            dependencies: [
+                "ACLogging",
+                .product(name: "SkipFuse", package: "skip-fuse")
+            ],
+            plugins: [
+                .plugin(name: "skipstone", package: "skip")
+            ]
         ),
         .testTarget(
             name: "ACLoggingTests",
