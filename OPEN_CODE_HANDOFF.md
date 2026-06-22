@@ -1,15 +1,37 @@
 # OpenCode Handoff
 
-This file is the durable continuation point for OpenCode when Codex runs out of tokens or context, including future chats with no prior conversation history.
+This file is the durable continuation point for OpenCode when Codex runs out of tokens or context, including future chats with no prior conversation history. Treat it as the conversation memory needed to continue as if the user were still talking to Codex.
+
+## Continuity Snapshot
+
+- Latest user intent: OpenCode must be able to continue the work like a Codex continuation, not merely find repository instructions.
+- Active task: make handoff state carry conversation continuity across future chats.
+- User preferences:
+  - Italian is preferred for conversational replies.
+  - Keep responses terse when the `caveman` skill is active.
+  - Follow repository branch rules from `AGENTS.md`.
+- Active assumptions:
+  - OpenCode may start from a future chat with no prior transcript.
+  - The repository files are the only durable memory unless a future agent updates them.
+  - `OPEN_CODE_HANDOFF.md` must be updated before any agent stops.
+- Decisions made:
+  - Use `AGENTS.md` for durable repository rules.
+  - Use `OPENCODE.md` as a root-level future-session entrypoint.
+  - Use this file for live task state, user intent, decisions, and next action.
+- What just happened:
+  - User clarified that OpenCode must continue as if the conversation with Codex were still active.
+  - A new branch `codex/opencode-conversation-continuity` was created from `develop`.
+- What Codex would do next:
+  - Finish strengthening this handoff, verify diff, commit the change, then integrate through `develop` and `main`.
 
 ## Current State
 
 - Repository: `ACLogging`
-- Current branch: `codex/opencode-handoff`
+- Current branch: `codex/opencode-conversation-continuity`
 - Base branch: `develop`
 - Required branches checked: `main` and `develop` exist
-- Working tree at handoff creation: clean before this documentation task
-- Current task: make repository continuation state explicit for OpenCode
+- Working tree at handoff creation: `develop` was ahead of `origin/develop` by the prior handoff commit
+- Current task: make repository continuation state conversationally complete for OpenCode
 
 ## How To Resume
 
@@ -23,7 +45,7 @@ git status --short --branch
 git diff
 ```
 
-5. Continue from the first unchecked plan item, or from `Next Step` below if no plan is available.
+5. Continue from `Continuity Snapshot`, then the first unchecked plan item, then `Next Codex-Equivalent Move`.
 6. Before stopping, update this file with latest state and next step.
 
 ## Project Shape
@@ -66,6 +88,14 @@ For DocC or GitHub Pages changes, inspect the workflow and generated output befo
 
 ## Current Task Log
 
+- User clarified that OpenCode must continue as if Codex conversation is still active.
+- Created branch `codex/opencode-conversation-continuity` from `develop`.
+- Added `plans/opencode-conversation-continuity-plan-2026-06-22.md`.
+- Updated `AGENTS.md`, `OPENCODE.md`, and this file to require conversation-continuity fields.
+- Verified documentation diff and repository state.
+
+## Previous Task Log
+
 - Created branch `codex/opencode-handoff` from `develop`.
 - Added `plans/opencode-handoff-plan-2026-06-22.md`.
 - Added `AGENTS.md`.
@@ -76,6 +106,6 @@ For DocC or GitHub Pages changes, inspect the workflow and generated output befo
 - Verified `git status --short --branch` and the documentation diff.
 - Note: `plans/` is ignored by `.gitignore`, so the local plan file is not shown as an untracked file.
 
-## Next Step
+## Next Codex-Equivalent Move
 
-Review the documentation changes, run no tests unless requested because this is documentation-only, then commit when ready.
+Commit this documentation-only continuity update, merge it into `develop`, then merge `develop` into `main`.
