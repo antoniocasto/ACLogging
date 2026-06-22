@@ -10,6 +10,8 @@ Documentation:
 - Hosted DocC documentation: [aclogging.acasto.dev](https://aclogging.acasto.dev/).
 - Public repository documentation lives in [docs/](docs/README.md).
 - Usage examples are available in the DocC articles under [Sources/ACLogging/ACLogging.docc](Sources/ACLogging/ACLogging.docc).
+- Agent continuation notes live in [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md).
+- OpenCode future-session entrypoint: [OPENCODE.md](OPENCODE.md).
 - Hosted DocC publication is configured through GitHub Pages from `main`.
 - Current public package release: `1.1.1`.
 

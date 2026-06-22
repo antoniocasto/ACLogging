@@ -6,6 +6,8 @@ This folder contains public documentation assets for ACLogging.
 - [Adapter guide](Adapters.md)
 - [Versioning and releases](Versioning.md)
 - [Roadmap](ROADMAP.md)
+- [OpenCode handoff](../OPEN_CODE_HANDOFF.md)
+- [OpenCode entrypoint](../OPENCODE.md)
 
 DocC usage articles live with the package source:
 
