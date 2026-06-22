@@ -13,12 +13,21 @@ git status --short --branch
 git diff
 ```
 
-Then continue from the `Next Step` section in [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md), unless the user gives a newer instruction.
+Then continue from these sections in [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md), unless the user gives a newer instruction:
+
+- `Continuity Snapshot`
+- `Current State`
+- `Next Codex-Equivalent Move`
 
 Before stopping, update [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) with:
 
 - current branch
 - active task
+- latest user intent
+- active assumptions
+- decisions made
+- what was just done
+- what Codex would do next
 - changed files
 - commands run
 - verification status
