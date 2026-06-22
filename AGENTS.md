@@ -6,7 +6,7 @@ This repository can be edited by Codex and OpenCode. Keep this file current when
 
 - Read [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) before doing any work.
 - If [OPENCODE.md](OPENCODE.md) exists, treat it as a short alias that points back to this file and the handoff.
-- Resume from the `Continuity Snapshot` and `Next Codex-Equivalent Move` sections in [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) unless the user gives a newer instruction.
+- Resume from the `Next Step` section in [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) unless the user gives a newer instruction.
 - Update [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) before stopping so another agent can continue without chat history.
 
 ## Branch Flow
@@ -31,7 +31,6 @@ This repository can be edited by Codex and OpenCode. Keep this file current when
 - Use [OPEN_CODE_HANDOFF.md](OPEN_CODE_HANDOFF.md) as the persistent continuation point.
 - Update the handoff before stopping, before long-running tool work, and after major state changes.
 - Include current branch, task, changed files, commands run, verification status, blockers, and the next exact step.
-- Also include conversation continuity: latest user intent, active assumptions, decisions made, what was just done, what Codex would do next, and any user preferences that affect future replies.
 - If context is lost, read this order first:
   1. `OPEN_CODE_HANDOFF.md`
   2. current task plan under `plans/`
